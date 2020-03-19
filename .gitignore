@@ -136,6 +136,6 @@ dmypy.json
 .pyre/
 
 # 폴더무시
-.idea/
+.idea
 
 # End of https://www.gitignore.io/api/macos,python
