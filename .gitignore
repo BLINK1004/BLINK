@@ -1,4 +1,4 @@
-
+﻿
 # Created by https://www.gitignore.io/api/macos,python
 # Edit at https://www.gitignore.io/?templates=macos,python
 
@@ -136,6 +136,14 @@ dmypy.json
 .pyre/
 
 # 폴더무시
-.idea
+.idea/
+venv/
+
+*.pyc
+
+
+db.sqlite3
+
+migrations/
 
 # End of https://www.gitignore.io/api/macos,python

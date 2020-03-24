@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+{% load socialaccount %}
+{% providers_media_js %}
+
+{% block content %}
+<style>
+
+  form {
+          margin: 0 auto;
+          width:250px;
+      }
+
+
+</style>
+
+    <div class="container px-3 py-6 pt-md-5 pb-md-4 mx-auto text-center">
+      <div class="row" text-align="center">
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1">
+          </div>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-danger" onclick="location.href='{% provider_login_url 'google' %}'">Google Login</button>
+        </form>
+      </div>
+    </div>
+
+{% endblock %}
