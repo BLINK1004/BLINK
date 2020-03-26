@@ -1,0 +1,71 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="row">
+
+    <!-- Sidebar Widgets Column -->
+    <div class="col-md-3" id="side-div">
+        <br/>
+        <br/>
+        <h2>목록</h2>
+        <br/>
+        <a href="/main/">나의 프로젝트</a>
+        <br/>
+        <a href="/main/">공유된 프로젝트</a>
+
+    </div>
+
+
+    <!-- Blog Entries Column -->
+    <div class="col-md-9" id="main-div">
+        <br/>
+        <h1 id="blog-list-title">
+            "{{ user }}" 의 프로젝트
+            <br/>
+        </h1>
+
+        {% if object_list.exists %}
+
+        <!-- Blog Post -->
+        <div class="card-deck">
+            {% for p in object_list %}
+            <div class="card sm-4" id="post-card-{{ p.pk }}" style="width: 18rem;">
+                {% if p.head_image %}
+                <img class="card-img-top" src="{{ p.head_image.url }}" alt="Card image cap">
+                {% else %}
+                <img class="card-img-top" src="https://picsum.photos/750/300/?random" alt="Card image cap">
+                {% endif %}
+
+                <div class="card-body">
+                    {% if p.category %}
+                    <span class="badge badge-primary float-right">{{ p.category }}</span>
+                    {% else %}
+                    <span class="badge badge-primary float-right">미분류</span>
+                    {% endif %}
+                    <h2 class="card-title">{{ p.title }}</h2>
+                    <p class="card-text">{{ p.content | truncatewords:50}}</p>
+                    {% for tag in p.tags.all %}
+                    <a href="{{ tag.get_absolute_url }}">#{{ tag }}</a>
+                    {% endfor %}
+                    <br/>
+                    <br/>
+
+                    <a href="{{ p.get_absolute_url }}" class="btn btn-primary" id="read-more-post-{{ p.pk }}">Read More &rarr;</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Posted on {{ p.created }} by
+                    <a href="#">{{ p.author }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <h3>아직 게시물이 없습니다.</h3>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
