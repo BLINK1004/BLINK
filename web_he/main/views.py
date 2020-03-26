@@ -30,3 +30,8 @@ def login(request):
         'main/login.html',
     )
 
+def img(request):
+    return render(
+        request,
+        'main/img.html',
+    )

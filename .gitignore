@@ -140,10 +140,4 @@ dmypy.json
 venv/
 
 *.pyc
-
-
-db.sqlite3
-
-migrations/
-
 # End of https://www.gitignore.io/api/macos,python
