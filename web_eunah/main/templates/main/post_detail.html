@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+
+<!-- Post Content Column -->
+<!-- Title -->
+<h1>{{ object.title }}</h1>
+
+<!-- Author -->
+<p class="lead">
+    by
+    <a href="#">{{ object.author.username }}</a>
+</p>
+{% if request.user == object.author %}
+<button type="button" class="btn btn-small btn-outline-info float-right" onclick="location.href='{{ object.get_update_url }}'">EDIT</button>
+{% endif %}
+<hr>
+
+<!-- Date/Time -->
+<p>Posted on {{ object.created }}</p>
+
+<hr>
+
+<!-- Preview Image -->
+{% if object.head_image %}
+<img class="img-fluid rounded" src={{ object.head_image.url }} alt="{{ object.title }}">
+{% endif %}
+<br/>
+<!-- Post Content -->
+{{ object.get_markdown_content | safe }}
+
+<br>
+{% for tag in object.tags.all %}
+<a href="{{ tag.get_absolute_url }}">#{{ tag }}</a>
+{% endfor %}
+<hr>
+
+{% endblock %}
