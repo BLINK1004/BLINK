@@ -8,3 +8,6 @@ class Project(models.Model):
 
     def __str__(self):
         return '{}'.format(self.title)
+
+    def get_absolute_url(self):
+        return '/project/{}/'.format(self.pk)

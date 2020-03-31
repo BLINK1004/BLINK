@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Project
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 class ProjectList(ListView):
     model = Project
@@ -11,6 +11,13 @@ class ProjectList(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectList, self).get_context_data(**kwargs)
 
+        return context
+
+class ProjectDetail(DetailView):
+    model = Project
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProjectDetail, self).get_context_data(**kwargs)
         return context
 
 def intro(request):
