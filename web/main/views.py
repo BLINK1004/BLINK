@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from .models import Project
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.models import User
+from django.contrib import auth
 
 class ProjectList(ListView):
     model = Project
@@ -36,6 +39,10 @@ def login(request):
         request,
         'main/login.html',
     )
+
+def logout(request):
+        auth.logout(request)
+        return redirect('intro')
 
 def img(request):
     return render(
