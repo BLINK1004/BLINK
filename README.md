@@ -13,3 +13,7 @@ python3 path/to/project/manage.py runserver
 
 deactivate
 ```
+
+- url
+
+  ![image-20200401124428125](images/image-20200401124428125.png) 
