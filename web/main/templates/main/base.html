@@ -9,46 +9,42 @@
   <link rel="stylesheet" href="{% static 'main/bootstrap/bootstrap.css' %}" media="screen">
   <link rel="stylesheet" href="{% static 'main/_assets/css/custom.min.css' %}">
   <link rel="stylesheet" href="{% static 'main/_assets/css/cropper.min.css' %}">
-
 </head>
 <body>
 
 <div class="navbar navbar-expand-lg fixed-top navbar-light bg-black"  id="navbar">
   <div class="container">
-    <a href="../" class="navbar-brand">Blink</a>
+    <a href="/intro/" class="navbar-brand">Blink</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
         <li class="nav-item">
-          <a class="nav-link" href="../">Main</a>
+          <a class="nav-link" href="/intro/">Main</a>
         </li>
+        {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="/main/">My project</a>
+          <a class="nav-link" href="/project/">My project</a>
         </li>
+        {% endif %}
       </ul>
 
       <ul class="nav navbar-nav ml-auto">
         {% if user.is_authenticated %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="download">{{ user }} <span class="caret"></span></a>
-          <div class="dropdown-menu" aria-labelledby="download">
-            <!--                        <a class="dropdown-item" target="_blank" href="https://jsfiddle.net/bootswatch/3he50zsf/">Open in JSFiddle</a>-->
-            <!--                        <div class="dropdown-divider"></div>-->
-            <!--                        <a class="dropdown-item" href="../4/simplex/bootstrap.min.css" download>bootstrap.min.css</a>-->
-            <!--                        <a class="dropdown-item" href="../4/simplex/bootstrap.css" download>bootstrap.css</a>-->
-            <!--                        <div class="dropdown-divider"></div>-->
-            <!--                        <a class="dropdown-item" href="../4/simplex/_variables.scss" download>_variables.scss</a>-->
-            <a class="dropdown-item" href="/accounts/logout/" download>Log out</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/logout/">Log out</a>
           </div>
         </li>
         {% else %}
         <li class="nav-item">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+          <a role="button" class="btn btn-primary" href="/login/">
             Log in
-          </button>
+          </a>
         </li>
         {% endif %}
       </ul>
@@ -63,6 +59,11 @@
 </div>
 
 <!-- Bootstrap core JavaScript -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src=" {% static 'main/_assets/js/jquery.slim.min.js' %}"></script>
 <script src="{% static 'main/bootstrap/bootstrap.bundle.min.js' %}"></script>
 <script src=" {% static 'main/_assets/js/jquery.min.js' %}"></script>
@@ -71,6 +72,7 @@
 <script src="{% static 'main/bootstrap/bootstrap.min.js' %}"></script>
 <script src="{% static 'main/_assets/js/custom.js' %}"></script>
 <script src="{% static 'main/_assets/js/cropper.min.js' %}"></script>
+
 
 </body>
 
