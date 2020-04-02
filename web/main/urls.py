@@ -7,5 +7,6 @@ urlpatterns = [
     path('logout/', views.logout),
     path('project/', views.ProjectList.as_view()),
     path('project/<int:pk>/', views.ProjectDetail.as_view()),
+    path('create/', views.ProjectCreate.as_view()),
     path('img/', views.img),
     ]
