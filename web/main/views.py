@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import Project
+from .models import MImgProject
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.models import User
 from django.contrib import auth
 
 class ProjectList(ListView):
-    model = Project
+    model = MImgProject
 
     def get_queryset(self):
-        return Project.objects.order_by('-created')
+        return MImgProject.objects.order_by('-created')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectList, self).get_context_data(**kwargs)
@@ -17,14 +17,14 @@ class ProjectList(ListView):
         return context
 
 class ProjectDetail(DetailView):
-    model = Project
+    model = MImgProject
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectDetail, self).get_context_data(**kwargs)
         return context
 
 def intro(request):
-    projects = Project.objects.all()
+    projects = MImgProject.objects.all()
 
     return render(
         request,
