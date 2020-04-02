@@ -19,8 +19,10 @@ class MImgProject(models.Model):
     # 길이 제한이 있는 필드
     title = models.CharField(max_length=30)
     # 길이 제한이 없는 필드
-    ocr_data= models.TextField()
+    ocr_data= models.TextField(blank=True)
     img_origin = models.ImageField(upload_to='main/%y/%m/%d/', blank=True)
+    img_mask = models.ImageField(upload_to='main/%y/%m/%d/', blank=True)
+    img_inpaint = models.ImageField(upload_to='main/%y/%m/%d/', blank=True)
     description = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
 
