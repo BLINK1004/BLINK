@@ -11,6 +11,9 @@ class Muser(models.Model):
     user_id = models.CharField(max_length=30)
     user_name = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.user_name
+
 
 class MImgProject(models.Model):
     # 길이 제한이 있는 필드
@@ -19,7 +22,7 @@ class MImgProject(models.Model):
     ocr_data= models.TextField()
     img_origin = models.ImageField(upload_to='main/%y/%m/%d/', blank=True)
     description = models.CharField(max_length=50)
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
 
     # 유저하나에 프로젝트가 여러개
     user = models.ForeignKey(Muser, on_delete=models.CASCADE)
