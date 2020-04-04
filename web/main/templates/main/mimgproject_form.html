@@ -3,7 +3,9 @@
 {% block title %}{{ object.title }} - Project{% endblock %}
 
 {% block content %}
-<form method="post">{% csrf_token %}
+
+<!-- enctype 추가 해줘야 image 데이터가 정상적으로 저장됨 -->
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
     <table>
         {{ form.as_table }}
     </table>

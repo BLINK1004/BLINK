@@ -1,5 +1,6 @@
 import os
 import json
+import cv2
 json_path = '/Users/singwanghyeon/Source/git/goologin-272011-f2b7a9f953f2.json'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
 
@@ -45,6 +46,12 @@ def detect_text(path):
 
     print(ocr_decode)
 
+def im_read(path):
+    img = cv2.imread(path)
+    print('opencv 함수 정상 실행 확인',type(img))
 
-detect_text('/Users/singwanghyeon/Source/git/2_100_006.jpg')
+# detect_text('/Users/singwanghyeon/Source/git/2_100_006.jpg')
+
+
+
 

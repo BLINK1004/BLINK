@@ -4,6 +4,15 @@
 
 {% block content %}
 
-<h1> {{object.title}} </h1>
+<h1>{{object.title}}</h1>
+
+<form method="GET">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">save</button>
+</form>
+
+<img src = {{object.img_origin.url}} alt="이미지 설명" />
+
 
 {% endblock %}
