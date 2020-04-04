@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 '''
 상대 모델에 접근하기
@@ -8,15 +9,15 @@ MImgProject.user
 MImgProject.user.user_id
 MImgProject.user.user_name
 '''
-# Create your models here.
-class Muser(models.Model):
-    user_id = models.CharField(max_length=30)
-    user_name = models.CharField(max_length=30)
+# # Create your models here.
+# class Muser(models.Model):
+#     user_id = models.CharField(max_length=30)
+#     user_name = models.CharField(max_length=30)
+#
+#     def __str__(self):
+#         return self.user_name
 
-    def __str__(self):
-        return self.user_name
 
-from django.contrib.auth import get_user_model
 
 class MImgProject(models.Model):
     # 프로젝트 이름 필드 / 길이 제한이 있음
