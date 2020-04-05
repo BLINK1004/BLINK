@@ -17,33 +17,40 @@
         left: 0;
         right: 0;
         bottom: 0;
-        height: 800px;
+        height: 700px;
 
     }
 
     div.canvas-main {
         overflow: visible;
         position: relative;
-        height: 1000px;
+        height: {{object.img_origin.height}};
         margin: 0 auto;
         background-image: url('{{object.img_origin.url}}');
+        width: {{object.img_origin.width}}px;
+        height: {{object.img_origin.height}}px;
         box-shadow: 2px 2px 10px rgba(0,0,0,1), 0 0 0 1px #ddd;
         -webkit-transform: translate3d(0,0,0);
         transform: translate3d(0,0,0);
     }
 
     div.object {
-        width: 100%;
+        width: {{object.img_origin.width}}px;
         height: 500px;
         background-color: red;
     }
 
     div.resizer {
         position: relative;
-        margin: 350px auto;
+        margin: 0 auto;
     }
 
 </style>
+
+<script>
+    console.log({{object.img_origin.width}})
+    console.log({{object.img_origin.height}})
+</script>
      <div>
          <input type="button" id="clear" value="모두 지움"/>
      </div>
@@ -66,7 +73,7 @@
 <div class="canvas-outline">
 <div calss="canvas_resizer">
 <div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true">
-         <canvas id="canvas" width="4028" height="2962">
+         <canvas id="canvas" width={{object.img_origin.width}}px height={{object.img_origin.height}}px >
          이 브라우저는 캔버스를 지원하지 않습니다.
          </canvas>
 </div>
