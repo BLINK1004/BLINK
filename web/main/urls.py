@@ -5,6 +5,8 @@ urlpatterns = [
     path('intro/', views.intro, name='intro'),
     path('login/', views.login),
     path('logout/', views.logout),
+    path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
+    path('profile/<int:pk>/update/', views.ProfileUpdateView.as_view(), name='profile_update'),
     path('project/', views.ProjectList.as_view()),
     path('project/<int:pk>/', views.ProjectDetail.as_view()),
     path('create/', views.ProjectCreate.as_view()),

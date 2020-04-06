@@ -37,6 +37,8 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="download">{{ user }} <span class="caret"></span></a>
           <div class="dropdown-menu">
+<!--            <a class="dropdown-item" href="{{ object.get_absolute_url }}">Profile</a>-->
+            <a class="dropdown-item" href="/profile/{{ user.pk }}/">Profile</a>
             <a class="dropdown-item" href="/logout/">Log out</a>
           </div>
         </li>
