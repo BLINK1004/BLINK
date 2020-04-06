@@ -2,9 +2,58 @@
 
 {% block title %}{{ object.title }} - Project{% endblock %}
 
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <h1>{{object.title}}</h1>
+
+<style>
+    div.canvas-outline {
+        position: absolute;
+        overflow: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 700px;
+
+    }
+
+    div.canvas-main {
+        overflow: visible;
+        position: relative;
+        height: {{object.img_origin.height}};
+        margin: 0 auto;
+        background-image: url('{{object.img_origin.url}}');
+        width: {{object.img_origin.width}}px;
+        height: {{object.img_origin.height}}px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,1), 0 0 0 1px #ddd;
+        -webkit-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+    }
+
+    div.object {
+        width: {{object.img_origin.width}}px;
+        height: 500px;
+        background-color: red;
+    }
+
+    div.resizer {
+        position: relative;
+        margin: 0 auto;
+    }
+
+</style>
+
+<script>
+    console.log({{object.img_origin.width}})
+    console.log({{object.img_origin.height}})
+</script>
+     <div>
+         <input type="button" id="clear" value="모두 지움"/>
+     </div>
+     <br><br>
 
 <form method="GET">
     {% csrf_token %}
@@ -12,7 +61,38 @@
     <button type="submit">save</button>
 </form>
 
-<img src = {{object.img_origin.url}} alt="이미지 설명" />
+<!--<img src = {{object.img_origin.url}} alt="이미지 설명" />-->
+
+<div class="container" data-spy="scroll" data-offset="0">
+
+<div class="row">
+
+<div class="col-lg-9">
+<div id = "editor">
+<div class="canvas-outline">
+<div calss="canvas_resizer">
+<div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true">
+         <canvas id="canvas" width={{object.img_origin.width}}px height={{object.img_origin.height}}px >
+         이 브라우저는 캔버스를 지원하지 않습니다.
+         </canvas>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="col-lg-3">
+<div class="object">
+</div>
+</div>
+
+</div>
+</div>
+
+<script src = "{% static 'main/js/mouseevent.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 
 {% endblock %}
