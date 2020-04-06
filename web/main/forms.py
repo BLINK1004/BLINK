@@ -1,8 +1,8 @@
 from django import forms
-from .models import MImgProject
+from .models import ProjectForm
 
-class GetForm(forms.ModelForm):
+class PostForm(forms.ModelForm):
     # Form을 통해 사용자가 입력한 box의 데이터를 받아온다
     class Meta:
-        model = MImgProject
-        fields = ('input_history',)
+        model = ProjectForm
+        fields = ['text']
