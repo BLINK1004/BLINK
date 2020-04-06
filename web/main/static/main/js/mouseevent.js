@@ -91,7 +91,7 @@
                          drawRects();
                     }
                }
-
+                var jsonArray = new Array();
                canvas.onmouseup = function(e) {
                     // 좌표 정규화해서 새로운 도형을 배열에 추가
                     if (drawing) {
@@ -103,6 +103,15 @@
                          arRectangle.push(new Rectangle(x1, y1, x2, y2,color));
                     }
                      console.log("x: " + sx + "y: " + sy + "width: " + (ex-sx) + "height: " + (ey-sy))
+                     var json = new Object();
+                     json.x = sx;
+                     json.y = sy;
+                     json.width = (ex-sx);
+                     json.height = (ey-sy);
+                     jsonArray.push(json);
+                     console.log(JSON.stringify(jsonArray));
+
+
                     drawing = false;
                     moving = -1;
                }
