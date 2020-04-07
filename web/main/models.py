@@ -17,6 +17,14 @@ MImgProject.user.user_name
 #     def __str__(self):
 #         return self.user_name
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE) # 현 계정의 사용자를 가져올 수 있음.
+    nickname = models.CharField(max_length=64)
+    profile_photo = models.ImageField(blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+
+    def get_absolute_url(self):
+        return '/profile/{}/'.format(self.pk)
 
 
 class MImgProject(models.Model):
