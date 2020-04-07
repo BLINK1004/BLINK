@@ -54,4 +54,13 @@ class MImgProject(models.Model):
         return '/project/{}/'.format(self.pk)
 
 
+class ProjectForm(models.Model):
+    User = get_user_model()
+    project = models.ForeignKey(MImgProject, on_delete=models.CASCADE)
+    writer = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+
+    def __str__(self):
+        return '{}'.format(self.writer)
+
 
