@@ -55,6 +55,7 @@ class MImgProject(models.Model):
 
 
 class ProjectForm(models.Model):
+    User = get_user_model()
     project = models.ForeignKey(MImgProject, on_delete=models.CASCADE)
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
