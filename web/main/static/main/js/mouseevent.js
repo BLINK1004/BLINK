@@ -6,6 +6,8 @@
           var color;               // 현재 색상
           var drawing;                // 그리고 있는 중인가
           var moving = -1;              // 이동중인 도형 첨자
+          var jsonArray = new Array();
+          var json = new Object();
 
           // 사각형 생성자
            function Rectangle(sx, sy, ex, ey, color) {
@@ -91,7 +93,7 @@
                          drawRects();
                     }
                }
-                var jsonArray = new Array();
+
                canvas.onmouseup = function(e) {
                     // 좌표 정규화해서 새로운 도형을 배열에 추가
                     if (drawing) {
@@ -103,6 +105,7 @@
                          arRectangle.push(new Rectangle(x1, y1, x2, y2,color));
                     }
                      console.log("x: " + sx + "y: " + sy + "width: " + (ex-sx) + "height: " + (ey-sy))
+
                      var json = new Object();
                      json.x = sx;
                      json.y = sy;
@@ -128,6 +131,11 @@
                 arRectangle.length = 0;
            }
 
+           var btnsave = document.getElementById("trysave");
+           var ptag = document.getElementById("ptag");
+           trysave.onclick = function(e){
+            ptag.innerHTML = JSON.stringify(jsonArray);
+           }
 
 
            function canvasX(clientX) {

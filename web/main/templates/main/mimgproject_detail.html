@@ -6,7 +6,7 @@
 {% block content %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-<h1>{{object.title}}</h1>
+<h1 id="title">{{object.title}}</h1>
 
 <style>
     div.canvas-outline {
@@ -57,9 +57,14 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">save</button>
+    <p>
+        <label for="id_text">Text:</label>
+        <textarea id="ptag" name="text" cols="40" rows="10" required id="id_text"></textarea>
+    </p>
+    <button id="save" type="submit">save</button>
 </form>
+
+<button id="trysave" type="submit">Click for save</button>
 
 <!--<img src = {{object.img_origin.url}} alt="이미지 설명" />-->
 
