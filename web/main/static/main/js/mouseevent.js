@@ -81,17 +81,17 @@
                          ctx.strokeRect(sx, sy, ex-sx, ey-sy);
                     }
 
-                   // 상대적인 마우스 이동 거리만큼 도형 이동
-                    if (moving != -1) {
-                         var r = arRectangle[moving];
-                         r.sx += (ex - sx);
-                         r.sy += (ey - sy);
-                         r.ex += (ex - sx);
-                         r.ey += (ey - sy);
-                         sx = ex;
-                         sy = ey;
-                         drawRects();
-                    }
+//                   // 상대적인 마우스 이동 거리만큼 도형 이동
+//                    if (moving != -1) {
+//                         var r = arRectangle[moving];
+//                         r.sx += (ex - sx);
+//                         r.sy += (ey - sy);
+//                         r.ex += (ex - sx);
+//                         r.ey += (ey - sy);
+//                         sx = ex;
+//                         sy = ey;
+//                         drawRects();
+//                    }
                }
 
                canvas.onmouseup = function(e) {
@@ -125,16 +125,16 @@
  // <!--              color = selcolor.value;-->
  // <!--         }-->
 
-           var btnclear = document.getElementById("clear");
-           btnclear.onclick = function(e) {
+           var btnClear = document.getElementById("clear");
+           btnClear.onclick = function(e) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 arRectangle.length = 0;
            }
 
-           var btnsave = document.getElementById("trysave");
-           var ptag = document.getElementById("ptag");
-           trysave.onclick = function(e){
-            ptag.innerHTML = JSON.stringify(jsonArray);
+           var btnSave = document.getElementById("trysave");
+           var pTag = document.getElementById("ptag");
+           btnSave.onclick = function(e){
+            pTag.innerHTML = JSON.stringify(jsonArray);
            }
 
 

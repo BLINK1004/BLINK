@@ -23,27 +23,31 @@ class ProjectList(ListView):
         context = super(ProjectList, self).get_context_data(**kwargs)
         return context
 
-class ProjectDetail(LoginRequiredMixin,FormMixin, DetailView):
+class ProjectDetail(LoginRequiredMixin, FormMixin, DetailView):
     model = MImgProject
     form_class = PostForm
+    projectforms = ProjectForm.objects.all()
+
 
     def get_success_url(self): #post 처리가 성공한 뒤 행할 행동
-        print(ConnectionRefusedError)
         return reverse('detail', kwargs={'pk': self.object.pk}) #디테일뷰 다시 보여주기
 
     def get_context_data(self, **kwargs): #template에 보낼 context 설정
         context = super(ProjectDetail, self).get_context_data(**kwargs)
+
         context['form'] = PostForm(initial={
             'text': '', #textfield에 default value 설정
         })
         context['mimgproject'].img_temp = context['mimgproject'].img_origin
+        context['form'] = ProjectForm.objects.order_by('pk').first().text
         context['mimgproject'].save()
         context['user'] = self.request.user #user 이름 표시
 
         imageURL = context['mimgproject'].img_temp.name
         path = settings.MEDIA_ROOT + '/' + imageURL
         print(path)
-
+        print("=========context============")
+        print(context)
         return context
 
     def post(self, request, *args, **kwargs): #POST 요청이 들어왔을 때
@@ -56,17 +60,12 @@ class ProjectDetail(LoginRequiredMixin,FormMixin, DetailView):
             else:
                 return self.form_invalid(form)
         else:
-            print("==========first=========")
-            print(ProjectForm.objects.order_by('pk').first().text)
             projectform = form.save(commit=False)
 
             item = ProjectForm.objects.order_by('pk').first()
             item.text = projectform.text
             item.save()
             # ProjectForm.objects.order_by('pk').first().text = projectform.text
-            print(projectform.text)
-            print(ProjectForm.objects.order_by('pk').first().text)
-            print("END")
             return super(ProjectDetail, self).form_valid(form)
 
 
@@ -78,6 +77,7 @@ class ProjectDetail(LoginRequiredMixin,FormMixin, DetailView):
         projectform.text = projectform.text
         projectform.save() #수정된 내용 저장 후 쿼리 실행
         return super(ProjectDetail, self).form_valid(form)
+
 
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
