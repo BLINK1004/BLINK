@@ -8,6 +8,7 @@
           var moving = -1;              // 이동중인 도형 첨자
           var jsonArray = new Array();
           var json = new Object();
+          var totalJson = new Object();
 
           // 사각형 생성자
            function Rectangle(sx, sy, ex, ey, color) {
@@ -112,7 +113,14 @@
                      json.width = (ex-sx);
                      json.height = (ey-sy);
                      jsonArray.push(json);
-                     console.log(JSON.stringify(jsonArray));
+
+                     //path 정보인 json이 담긴 array jsonArray를 담을 것임
+
+                     totalJson.path = jsonArray;
+                     var jsonInfo = JSON.stringify(totalJson);
+
+                     console.log("---------totaljson-------------")
+                     console.log(totalJson);
 
 
                     drawing = false;
@@ -134,7 +142,7 @@
            var btnSave = document.getElementById("trysave");
            var pTag = document.getElementById("ptag");
            btnSave.onclick = function(e){
-            pTag.innerHTML = JSON.stringify(jsonArray);
+            pTag.innerHTML = JSON.stringify(totalJson);
            }
 
 

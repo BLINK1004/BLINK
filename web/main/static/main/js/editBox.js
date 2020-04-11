@@ -1,9 +1,12 @@
+   var btnEdit = document.getElementById("edit");
+   var form = document.getElementById("form-path").textContent;
+   btnEdit.onclick = function(e) {
+        var a = JSON.parse(form)
+        var jsonForm = JSON.parse(a)
+        console.log("--------------JSON.parse(obj) result in EditBox ----------");
+        console.log(jsonForm);
 
-
-
-
-           var btnEdit = document.getElementById("edit");
-           btnclear.onclick = function(e) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                arRectangle.length = 0;
-           }
+        for(key in jsonForm.path){
+        console.log(jsonForm.path[key].x);
+        }
+   }
