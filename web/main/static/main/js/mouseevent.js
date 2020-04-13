@@ -45,7 +45,7 @@
                 if (canvas == null || canvas.getContext == null) return;
                 ctx = canvas.getContext("2d");
                 ctx.strokeStyle = "black";
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 10;
                 color = "rgba(255, 255, 255, 0)"
                 ctx.fillStyle = color;
 //                var img = new Image();
@@ -137,6 +137,7 @@
            btnClear.onclick = function(e) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 arRectangle.length = 0;
+                location.reload(true);
            }
 
            var btnSave = document.getElementById("trysave");
