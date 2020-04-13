@@ -6,6 +6,9 @@
           var color;               // 현재 색상
           var drawing;                // 그리고 있는 중인가
           var moving = -1;              // 이동중인 도형 첨자
+          var jsonArray = new Array();
+          var json = new Object();
+          var totalJson = new Object();
 
           // 사각형 생성자
            function Rectangle(sx, sy, ex, ey, color) {
@@ -42,7 +45,7 @@
                 if (canvas == null || canvas.getContext == null) return;
                 ctx = canvas.getContext("2d");
                 ctx.strokeStyle = "black";
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 10;
                 color = "rgba(255, 255, 255, 0)"
                 ctx.fillStyle = color;
 //                var img = new Image();
@@ -79,19 +82,19 @@
                          ctx.strokeRect(sx, sy, ex-sx, ey-sy);
                     }
 
-                   // 상대적인 마우스 이동 거리만큼 도형 이동
-                    if (moving != -1) {
-                         var r = arRectangle[moving];
-                         r.sx += (ex - sx);
-                         r.sy += (ey - sy);
-                         r.ex += (ex - sx);
-                         r.ey += (ey - sy);
-                         sx = ex;
-                         sy = ey;
-                         drawRects();
-                    }
+//                   // 상대적인 마우스 이동 거리만큼 도형 이동
+//                    if (moving != -1) {
+//                         var r = arRectangle[moving];
+//                         r.sx += (ex - sx);
+//                         r.sy += (ey - sy);
+//                         r.ex += (ex - sx);
+//                         r.ey += (ey - sy);
+//                         sx = ex;
+//                         sy = ey;
+//                         drawRects();
+//                    }
                }
-                var jsonArray = new Array();
+
                canvas.onmouseup = function(e) {
                     // 좌표 정규화해서 새로운 도형을 배열에 추가
                     if (drawing) {
@@ -103,13 +106,21 @@
                          arRectangle.push(new Rectangle(x1, y1, x2, y2,color));
                     }
                      console.log("x: " + sx + "y: " + sy + "width: " + (ex-sx) + "height: " + (ey-sy))
+
                      var json = new Object();
                      json.x = sx;
                      json.y = sy;
                      json.width = (ex-sx);
                      json.height = (ey-sy);
                      jsonArray.push(json);
-                     console.log(JSON.stringify(jsonArray));
+
+                     //path 정보인 json이 담긴 array jsonArray를 담을 것임
+
+                     totalJson.path = jsonArray;
+                     var jsonInfo = JSON.stringify(totalJson);
+
+                     console.log("---------totaljson-------------")
+                     console.log(totalJson);
 
 
                     drawing = false;
@@ -122,12 +133,18 @@
  // <!--              color = selcolor.value;-->
  // <!--         }-->
 
-           var btnclear = document.getElementById("clear");
-           btnclear.onclick = function(e) {
+           var btnClear = document.getElementById("clear");
+           btnClear.onclick = function(e) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 arRectangle.length = 0;
+                location.reload(true);
            }
 
+           var btnSave = document.getElementById("trysave");
+           var pTag = document.getElementById("ptag");
+           btnSave.onclick = function(e){
+            pTag.innerHTML = JSON.stringify(totalJson);
+           }
 
 
            function canvasX(clientX) {
