@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import MImgProject, ProjectForm
 from .forms import PostForm, UserForm, ProfileForm
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +11,7 @@ from . import cv_function
 from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404
 from django.views import View
+from django.http import HttpResponse
 
 
 class ProjectList(ListView):
@@ -22,6 +23,22 @@ class ProjectList(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectList, self).get_context_data(**kwargs)
         return context
+
+def post(request, pk):
+    post = get_object_or_404(MImgProject, pk=pk)
+
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save()
+            print(form)
+            return redirect('detail', pk=post.pk)
+    else:
+        form = PostForm(instance=post)
+        context = {
+            'form':form
+        }
+        return render(request, 'main/detail.html', context)
 
 class ProjectDetail(LoginRequiredMixin, FormMixin, DetailView):
     model = MImgProject
