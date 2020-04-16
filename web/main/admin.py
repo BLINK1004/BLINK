@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MImgProject, ProjectForm
+from .models import MImgProject
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from .models import Profile
@@ -7,7 +7,6 @@ from .models import Profile
 # Register your models here.
 
 admin.site.register(MImgProject)
-admin.site.register(ProjectForm)
 # admin.site.register(Muser)
 
 class ProfileInline(admin.StackedInline): # 로또 프로젝트에서 썼던 방식으로 유저 밑에 프로필 을 붙여서 보여주려고 이를 상속받음

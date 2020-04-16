@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import MImgProject, ProjectForm
+from .models import MImgProject
 from .forms import PostForm, UserForm, ProfileForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.models import User
