@@ -45,7 +45,7 @@
                 if (canvas == null || canvas.getContext == null) return;
                 ctx = canvas.getContext("2d");
                 ctx.strokeStyle = "black";
-                ctx.lineWidth = 10;
+                ctx.lineWidth = 4;
                 color = "rgba(255, 255, 255, 0)"
                 ctx.fillStyle = color;
 //                var img = new Image();
@@ -141,9 +141,9 @@
            }
 
            var btnSave = document.getElementById("trysave");
-           var pTag = document.getElementById("ptag");
+           var pTag = document.getElementById("id_input_history")
            btnSave.onclick = function(e){
-            pTag.innerHTML = JSON.stringify(totalJson);
+            pTag.innerText = JSON.stringify(totalJson);
            }
 
 
