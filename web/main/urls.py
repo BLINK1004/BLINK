@@ -8,7 +8,6 @@ urlpatterns = [
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
     path('profile_update/', views.ProfileUpdateView.as_view(), name='profile_update'),
     path('project/', views.ProjectList.as_view()),
-    # path('project/<int:pk>/', views.ProjectDetail.as_view(),  name='detail'),
     path('project/<int:pk>/', views.post, name='detail'),
     path('create/', views.ProjectCreate.as_view()),
     path('img/', views.img),
