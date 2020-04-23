@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <h1>{{post.title}}</h1>
-{{post.img_origin.width}}
+{{post.img_view.width}}
 
 <style>
     div.canvas-outline {
@@ -24,18 +24,18 @@
     div.canvas-main {
         overflow: visible;
         position: relative;
-        height: {{post.img_origin.height}};
+        height: {{post.img_view.height}};
         margin: 0 auto;
-        background-image: url('{{post.img_origin.url}}');
-        width: {{post.img_origin.width}}px;
-        height: {{post.img_origin.height}}px;
+        background-image: url('{{post.img_view.url}}');
+        width: {{post.img_view.width}}px;
+        height: {{post.img_view.height}}px;
         box-shadow: 2px 2px 10px rgba(0,0,0,1), 0 0 0 1px #ddd;
         -webkit-transform: translate3d(0,0,0);
         transform: translate3d(0,0,0);
     }
 
     div.object {
-        width: {{post.img_origin.width}}px;
+        width: {{post.img_view.width}}px;
         height: 500px;
         background-color: red;
     }
@@ -73,7 +73,7 @@
 <div class="canvas-outline">
 <div calss="canvas_resizer">
 <div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true">
-         <canvas id="canvas" width={{post.img_origin.width}}px height={{post.img_origin.height}}px >
+         <canvas id="canvas" width={{post.img_view.width}}px height={{post.img_view.height}}px >
          이 브라우저는 캔버스를 지원하지 않습니다.
          </canvas>
 </div>

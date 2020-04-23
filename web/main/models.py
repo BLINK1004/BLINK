@@ -26,6 +26,14 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return '/profile/{}/'.format(self.pk)
 
+# class BoxForm(models.Model):
+#     x = models.IntegerField()
+#     y = models.IntegerField()
+#     w = models.IntegerField()
+#     h = models.IntegerField()
+#     center = models.IntegerField()
+#     txt = models.TextField(blank=True)
+#     style = models.TextField(blank=True)
 
 class MImgProject(models.Model):
     # 프로젝트 이름 필드 / 길이 제한이 있음
@@ -41,6 +49,8 @@ class MImgProject(models.Model):
     img_mask = models.ImageField(upload_to='main/%y/%m/%d/', blank=True)
     # inpaint model의 output을 저장할 필드
     img_inpaint = models.ImageField(upload_to='main/%y/%m/%d/', blank=True)
+    # temp box
+    input_box = models.TextField(blank=True)
     # 사용자가 입력한 box(x,y,w,h) 데이터 필드
     input_history = models.TextField(blank=True)
 

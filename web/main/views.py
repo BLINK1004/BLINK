@@ -12,6 +12,9 @@ from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.http import HttpResponse
+import json
+from django.core.files.images import ImageFile
+import cv2
 
 
 class ProjectList(ListView):
@@ -28,39 +31,110 @@ def post(request, pk):
     post = get_object_or_404(MImgProject, pk=pk)
 
     if request.method == "POST":
+        # record
         form = PostForm(request.POST, instance=post)
+
         if form.is_valid():
+            # 사용자 입력 box
+            dic = json.loads(request.POST['input_history'])
+
+            boxs = []
+            for d in dic['path']:
+                boxs.append([int(d['x']), int(d['y']), int(d['width']), int(d['height'])])
+            print(boxs)
+
+            # 원본 이미지 경로
+            # origin_URL = settings.MEDIA_ROOT + '/' + post.img_origin.name
+
+            # 마스크 이미지 경로
+            mask_URL = settings.MEDIA_ROOT + '/' + post.img_mask.name
+
+            # inpaint 이미지 경로
+            inpaint_URL = settings.MEDIA_ROOT + '/' + post.img_inpaint.name
+
+            # view 이미지 경로
+            view_URL = settings.MEDIA_ROOT + '/' + post.img_view.name
+
+            # ocr data
+            ocr_data = post.ocr_data
+
+            # user box 토대로 change image 저장
+            img = cv_function.pixel_change(view_URL, inpaint_URL, boxs)
+
+            print(view_URL)
+
+            # over write
+            cv2.imwrite(view_URL, img)
+
+            # pixel_change
+            # record : x ,y ,width ,height, center, txt, style
+            lst = []
+            for b in boxs:
+                record = dict()
+                record['x'] = b[0]
+                record['y'] = b[1]
+                record['w'] = b[2]
+                record['h'] = b[3]
+
+                box = [record['x'], record['y'], record['w'], record['h']]
+                record['center'] = cv_function.init_center(mask_URL, box)
+                record['txt'] = cv_function.find_txt(box, ocr_data)
+                record['style'] = ''
+                print(" 레코드 확인 ! ")
+                print(record)
+                lst.append(record)
+            try:
+                # record가 있을 경우
+                box_lst = json.loads(post.input_box)
+            except:
+                # record가 없을 경우
+                box_lst = []
+
+            for r in lst:
+                box_lst.append(r)
+
+            post.input_box = json.dumps(box_lst)
+
+            form = PostForm(request.POST, instance=post)
+
             post = form.save()
-            print(form)
+
             return redirect('detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
-        print(form)
         context = {
             'form':form,
             'post':post,
         }
         return render(request, 'main/detail.html', context)
 
+
 class ProjectCreate(LoginRequiredMixin, CreateView):
     model = MImgProject
-    fields = ('title','img_origin','description')
+    fields = ('title','img_view','description')
     # fields = '__all__'
 
     def form_valid(self, form):
         current_user = self.request.user
+
         if current_user.is_authenticated:
             form.instance.author = current_user
 
             mimgproject = form.save(commit=False)
-            mimgproject.description = 'hihihi'
             # user 필드에 현재 로그인되어 있는 유저를 저장
             mimgproject.user = self.request.user
+            mimgproject.save()
+
+            viewURL = settings.MEDIA_ROOT + '/' + mimgproject.img_view.name
+
+            ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
+            mimgproject.ocr_data = ocr_data
+            mimgproject.img_origin = mimgproject.img_view # original 이미지 백업
+            mimgproject.save()
 
             return super(type(self), self).form_valid(form)
         else:
             return redirect('intro')
-
 
 def intro(request):
     projects = MImgProject.objects.all()
