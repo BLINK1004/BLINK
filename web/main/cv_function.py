@@ -2,7 +2,7 @@ import os
 import numpy as np
 import json
 import cv2
-json_path = '/Users/singwanghyeon/Source/git/goologin-272011-f2b7a9f953f2.json'
+json_path = 'path/to/aa.json'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
 
 # 업로드 단계
