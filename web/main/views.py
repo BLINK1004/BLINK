@@ -28,6 +28,11 @@ class ProjectList(ListView):
         context = super(ProjectList, self).get_context_data(**kwargs)
         return context
 
+def edit(request, pk):
+    post = get_object_or_404(MImgProject, pk=pk)
+
+    return render(request, 'main/edit.html', {"post":post})
+
 def post(request, pk):
     post = get_object_or_404(MImgProject, pk=pk)
 

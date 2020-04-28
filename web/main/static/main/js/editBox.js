@@ -1,10 +1,10 @@
 var btnEdit = document.getElementById("edit");
-var form = document.getElementById("id_input_history").textContent;
+var form = document.getElementById("json_data").textContent;
+console.log(form);
 var ctx2;
 
-   btnEdit.onclick = function(e) {
+//   btnEdit.onclick = function(e) {
         console.log("IN BTNEDIT")
-        console.log(form)
 //        var a = JSON.parse(form)
         var jsonForm = JSON.parse(form)
         console.log("--------------JSON.parse(obj) result in EditBox ----------");
@@ -18,7 +18,7 @@ var ctx2;
          h = jsonForm.path[key].height;
 
             canvas = document.getElementById("canvas");
-            if (canvas == null || canvas.getContext == null) return;
+//            if (canvas == null || canvas.getContext == null) return;
             ctx2 = canvas.getContext("2d");
             ctx2.strokeStyle = "red";
             ctx2.lineWidth = 2;
@@ -27,4 +27,4 @@ var ctx2;
             ctx2.fillRect(x, y, w, h);
             ctx2.strokeRect(x, y, w, h);
         }
-   }
+//   }
