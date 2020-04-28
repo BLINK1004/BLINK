@@ -15,7 +15,8 @@ from django.http import HttpResponse
 import json
 from django.core.files.images import ImageFile
 import cv2
-
+from django.core.files import File
+from io import BytesIO
 
 class ProjectList(ListView):
     model = MImgProject
@@ -79,6 +80,7 @@ def post(request, pk):
                 box = [record['x'], record['y'], record['w'], record['h']]
                 record['center'] = cv_function.init_center(mask_URL, box)
                 record['txt'] = cv_function.find_txt(box, ocr_data)
+                record['t_txt'] = ''
                 record['style'] = ''
                 print(" 레코드 확인 ! ")
                 print(record)
@@ -126,9 +128,23 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
             mimgproject.save()
 
             viewURL = settings.MEDIA_ROOT + '/' + mimgproject.img_view.name
+            # ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
+            # mimgproject.ocr_data = ocr_data
 
-            ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
-            mimgproject.ocr_data = ocr_data
+            # segmentation model run
+            maskURL = mimgproject.img_view.name[:-4] + '_mask.jpg'
+            print(maskURL)
+            cv_function.predict_seg(viewURL, maskURL)
+            mimgproject.img_mask = maskURL
+            mimgproject.save()
+
+            # inpaint model run
+            maskURL_ = settings.MEDIA_ROOT + '/' + mimgproject.img_mask.name
+            inpURL = mimgproject.img_view.name[:-4] + '_inp.jpg'
+            print(inpURL)
+            cv_function.predict_inp(viewURL, maskURL_, inpURL)
+            mimgproject.img_inpaint = inpURL
+
             mimgproject.img_origin = mimgproject.img_view # original 이미지 백업
             mimgproject.save()
 

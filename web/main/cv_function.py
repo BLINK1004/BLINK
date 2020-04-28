@@ -2,7 +2,11 @@ import os
 import numpy as np
 import json
 import cv2
-json_path = 'path/to/aa.json'
+from .ML.libs.pconv_model import PConvUnet
+from django.conf import settings
+from PIL import Image
+
+json_path = '/path/.json'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
 
 # 업로드 단계
@@ -122,4 +126,47 @@ def im_read(path):
 
 
 
+def predict_inp(oriURL, maskURL, inpURL):
+    # 이미지 load
+    mask_img = Image.open(maskURL)
+    mask_img = mask_img.resize((256, 512))
+    mask_img = np.array(mask_img)
 
+    # mask scale : 0 ~ 255 > 1 ~ 0
+    mask_img = mask_img - 255
+    mask_img[mask_img != 1] = 0
+    mask_img = mask_img.reshape(1, mask_img.shape[0], mask_img.shape[1], mask_img.shape[2])
+
+    ori_img = Image.open(oriURL)
+    ori_img = ori_img.resize((256, 512))
+    ori_img = np.array(ori_img)
+    ori_img = ori_img.reshape(1, ori_img.shape[0], ori_img.shape[1], ori_img.shape[2])
+
+    ori_img = ori_img * 1. / 255
+
+    # 원본 이미지에 마스크 입히기
+    ori_img[mask_img == 0] = 1
+
+    # 모델 load
+    model = PConvUnet()
+    model.load('./main/ML/model/inp/V1_1.30.h5')
+    out_img = model.predict([ori_img, mask_img])
+
+    pred = out_img[0, :, :, :]
+
+    pred = pred * 255
+
+    cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL, cv2.cvtColor(pred, cv2.COLOR_BGR2RGB))
+
+    return print('inpaint')
+
+
+def predict_seg(oriURL, maskURL):
+    # ori_img 코드 추가
+    ori_img = cv2.imread(oriURL)
+
+    img = cv2.imread('/Users/singwanghyeon/Source/git/tensorflow 2.0/data/masks/2_100_000_mask.jpg')
+    print(maskURL)
+    cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL ,img)
+
+    return print('segment')
