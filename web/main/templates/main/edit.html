@@ -8,7 +8,7 @@
 
 <h1>{{post.title}}</h1>
 {{post.img_view.width}}
-<div id="json_data">{{post.input_history}}
+<div id="json_data">{{post.input_box}}
 </div>
 
 <style>
@@ -57,10 +57,10 @@
 <div id = "editor">
 <div class="canvas-outline">
 <div calss="canvas_resizer">
-<div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true">
-         <canvas id="canvas" width={{post.img_view.width}}px height={{post.img_view.height}}px >
-         이 브라우저는 캔버스를 지원하지 않습니다.
-         </canvas>
+<div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true" id="canvas-main">
+<!--         <canvas id="canvas" width={{post.img_view.width}}px height={{post.img_view.height}}px >-->
+<!--         이 브라우저는 캔버스를 지원하지 않습니다.-->
+<!--         </canvas>-->
 </div>
 </div>
 </div>

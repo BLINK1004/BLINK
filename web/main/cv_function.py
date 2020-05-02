@@ -6,7 +6,7 @@ from .ML.libs.pconv_model import PConvUnet
 from django.conf import settings
 from PIL import Image
 
-json_path = '/path/.json'
+json_path = r'C:\Users\JHE\Desktop\goologin-272011-f2b7a9f953f2.json'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
 
 # 업로드 단계
@@ -165,7 +165,7 @@ def predict_seg(oriURL, maskURL):
     # ori_img 코드 추가
     ori_img = cv2.imread(oriURL)
 
-    img = cv2.imread('/Users/singwanghyeon/Source/git/tensorflow 2.0/data/masks/2_100_000_mask.jpg')
+    img = cv2.imread(r'C:\Users\JHE\Desktop\KakaoTalk_20200428_112258006.jpg')
     print(maskURL)
     cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL ,img)
 
