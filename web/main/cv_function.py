@@ -8,7 +8,7 @@ from PIL import Image
 from .ML.libs.segmentation import u_net, testImg_preprocessing
 
 
-json_path = r'C:\Users\JHE\Desktop\goologin-272011-f2b7a9f953f2.json'
+json_path = r'C:\Users\user\Desktop\goologin-272011-f2b7a9f953f2.json'
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
 

@@ -39,15 +39,29 @@
     div.object {
         width: {{post.img_view.width}}px;
         height: 500px;
-        background-color: red;
     }
 
     div.resizer {
         position: relative;
         margin: 0 auto;
     }
+    div.post {
+        float:left;
+        width:150px;
+        height:150px;
+        padding:10px 0px 0px 20px;
+        background-color:#f9d716;
+        border:1px solid black;
+        box-shadow:2px 2px 2px;
+    }
 
 </style>
+<script src=" {% static 'main/_assets/js/jquery.min.js' %}"></script>
+<script src=" {% static 'main/_assets/js/jquery-ui.js' %}"></script>
+
+<div class="post">
+    <p>hello</p>
+</div>
 
 <div class="container" data-spy="scroll" data-offset="0">
 
@@ -68,7 +82,7 @@
 </div>
 
 <div class="col-lg-3">
-<div class="object">
+<div class="object" id="object-list">
 </div>
 </div>
 
@@ -76,8 +90,5 @@
 </div>
 
 <script src = "{% static 'main/js/editBox.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 {% endblock %}
