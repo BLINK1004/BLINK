@@ -5,8 +5,11 @@ import cv2
 from .ML.libs.pconv_model import PConvUnet
 from django.conf import settings
 from PIL import Image
+from .ML.libs.segmentation import u_net, testImg_preprocessing
+
 
 json_path = r'C:\Users\JHE\Desktop\goologin-272011-f2b7a9f953f2.json'
+
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
 
 # 업로드 단계
@@ -163,10 +166,18 @@ def predict_inp(oriURL, maskURL, inpURL):
 
 def predict_seg(oriURL, maskURL):
     # ori_img 코드 추가
+    model = u_net()
     ori_img = cv2.imread(oriURL)
+    X_test = testImg_preprocessing(ori_img) 
 
-    img = cv2.imread(r'C:\Users\JHE\Desktop\KakaoTalk_20200428_112258006.jpg')
-    print(maskURL)
-    cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL ,img)
+    model.load_weights('./main/ML/model/seg/548--0.9618.h5') 
+    predict_img = model.predict(X_test, verbose = 1)
+    
+    predict_img_t=np.squeeze(predict_img) # 차원축소
+    img = predict_img_t
+    
+    # 1채널 -> 3 채널
+    new_img = np.stack((img,)*3, -1)
+    cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL ,new_img*255)
 
     return print('segment')
