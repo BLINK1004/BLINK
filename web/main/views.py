@@ -22,7 +22,11 @@ class ProjectList(ListView):
     model = MImgProject
 
     def get_queryset(self):
-        return MImgProject.objects.order_by('-created')
+        current_user = self.request.user
+        if current_user.is_authenticated:
+            return MImgProject.objects.order_by('-created')
+        else:
+            return redirect('intro')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectList, self).get_context_data(**kwargs)

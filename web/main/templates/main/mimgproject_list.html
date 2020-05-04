@@ -42,8 +42,10 @@
 
       <div class="row">
 
+        {% if user.is_authenticated %}
         {% if object_list.exists %}
         {% for p in object_list %}
+        {% if p.user == user %}
         <div class="col-lg-4 col-md-6 mb-4">
           <div class="card h-100">
             <a href="{{ p.get_absolute_url }}" id="read-more-project-{{ p.pk }}"><img class="card-img-top" src="{{p.img_view.url}}" alt=""></a>
@@ -59,7 +61,9 @@
             </div>
           </div>
         </div>
+        {% endif %}
         {% endfor %}
+        {% endif %}
         {% endif %}
 
 
