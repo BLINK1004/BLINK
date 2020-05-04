@@ -28,6 +28,7 @@ console.log(jsonForm);
             var div = document.createElement('div');
             div.style.color = "black";
             div.innerText = jsonForm[key].txt;
+            div.classList.add('bubble');
             div.style.left = jsonForm[key].x +"px";
             div.style.top = jsonForm[key].y +"px";
             div.style.width = jsonForm[key].w +"px";
@@ -38,3 +39,16 @@ console.log(jsonForm);
             canvasMain.appendChild(div);
 
         }
+
+    $(".bubble").draggable({      // 드래그
+        cursor:"move",      // 드래그 시 커서모양
+        stack:".post",      // .post 클래스끼리의 스택 기능
+        opacity:0.8         // 드래그 시 투명도
+    });
+
+    $(".bubble").bind("dragstart",function(event, ui){
+        $(this).addClass("color");  //bgi 체인지
+    });
+    $(".bubble").bind("dragstop", function(event, ui){
+        $(this).removeClass("color");   //bgi 체인지
+    });
