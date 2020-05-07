@@ -1,14 +1,13 @@
 {% extends 'main/base.html' %}
 
 {% block title %}{{ object.title }} - Project{% endblock %}
-
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <h1>{{post.title}}</h1>
 {{post.img_view.width}}
-
+{{ post.get_absolute_url }}
 <style>
     div.canvas-outline {
         position: absolute;
@@ -60,7 +59,7 @@
    </form>
 
 <button id="trysave" type="submit">Click for save</button>
-<button id="edit" type="submit">Edit</button>
+<button id="edit" type=button"><a href="{{ post.get_absolute_url }}edit">Edit</a></button>
   </div>
 
 
