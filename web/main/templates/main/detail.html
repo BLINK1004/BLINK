@@ -59,7 +59,7 @@
    </form>
 
 <button id="trysave" type="submit">Click for save</button>
-<button id="edit" type=button"><a href="{{ post.get_absolute_url }}edit">Edit</a></button>
+<button id="edit" type=button"><a href="{% url 'edit' post.pk %}">Edit</a></button>
   </div>
 
 

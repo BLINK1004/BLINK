@@ -10,6 +10,7 @@ console.log(jsonForm);
 
         for(key in jsonForm){
             var form = document.createElement('form');
+            form.setAttribute("id", key);
             objectList.appendChild(form);
 
 //          한글 번역 txt 창
@@ -19,12 +20,20 @@ console.log(jsonForm);
             div_kor.setAttribute("contenteditable", "true");
             form.appendChild(div_kor);
 
+            var delete_button = document.createElement('button');
+            form.setAttribute("id", key);
+            delete_button.classList.add('delbutton');
+            delete_button.innerText = "Del";
+            div_kor.appendChild(delete_button);
+
 //          영어 번역 결과가 들어가는 txt
             var text_label = document.createElement('input');
             text_label.type = 'text';
             text_label.classList.add('form-control');
             text_label.innerText = jsonForm[key].txt;
             div_kor.appendChild(text_label);
+
+
 
 //            img 위에 번역 txt
             console.log(jsonForm[key].x);
@@ -70,3 +79,4 @@ console.log(jsonForm);
     $(".bubble").bind("dragstop", function(event, ui){
         $(this).removeClass("color");   //bgi 체인지
     });
+
