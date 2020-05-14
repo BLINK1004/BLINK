@@ -10,19 +10,24 @@ console.log(jsonForm);
 const bubbleList = document.querySelector(".js-bubbleList");
 const BUBBLES_LS = "bubbles";
 
+function deleteJson(id){
+    console.log(jsonForm[id]);
+    delete jsonForm[id];
+    console.log(jsonForm);
+}
+
 function deleteBox(id){
     var name2 = 'div ' + id;
     var child = document.getElementById(name2);
     child.remove();
     }
 
-
-
 function deleteBubble(event){
     const btn = event.target;
     const li = btn.parentNode;
     bubbleList.removeChild(li);
     deleteBox(li.id);
+    deleteJson(li.id);
 }
 
 function showBubbleList(){

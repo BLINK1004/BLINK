@@ -35,6 +35,7 @@ class ProjectList(ListView):
 def edit(request, pk):
     post = get_object_or_404(MImgProject, pk=pk)
 
+
     return render(request, 'main/edit.html', {"post":post})
 
 def post(request, pk):
