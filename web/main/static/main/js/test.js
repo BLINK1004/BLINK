@@ -11,14 +11,12 @@ const bubbleList = document.querySelector(".js-bubbleList");
 const BUBBLES_LS = "bubbles";
 
 function deleteBox(id){
-    console.log(id);
-    const div = document.getElementsByClassName('bubble')[id];
-    console.log(div);
-    const parent = div.parentNode;
+    var name2 = 'div ' + id;
+    var child = document.getElementById(name2);
+    child.remove();
+    }
 
-    console.log(parent);
-    parent.removeChild(div);
-}
+
 
 function deleteBubble(event){
     const btn = event.target;
@@ -59,7 +57,7 @@ function paintBubbles(){
     for(key in jsonForm){
         var div = document.createElement('div');
         div.classList.add('bubble');
-        div.id = key;
+        div.classList.add(key);
         div.style.left = jsonForm[key].x +"px";
         div.style.top = jsonForm[key].y +"px";
         div.style.width = jsonForm[key].w +"px";
@@ -70,6 +68,7 @@ function paintBubbles(){
         canvasMain.appendChild(div);
 
         var div_txt = document.createElement('div');
+        div_txt.id = 'div ' + key;
         div_txt.style.color = "black";
         div_txt.innerText = jsonForm[key].txt;
         div_txt.style.left = jsonForm[key].center[1];
