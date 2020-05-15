@@ -63,6 +63,7 @@ function paintBubbles(){
         var div = document.createElement('div');
         div.classList.add('bubble');
         div.classList.add(key);
+        div.id = key;
         div.style.left = jsonForm[key].x +"px";
         div.style.top = jsonForm[key].y +"px";
         div.style.width = jsonForm[key].w +"px";
@@ -103,6 +104,22 @@ $(".bubble").draggable({      // 드래그
 
 $(".bubble").bind("dragstart",function(event, ui){
     $(this).addClass("color");  //bgi 체인지
+
+    //움직일 때 변경된 좌표를 json에 다시 저장
+    var x = $(this).position().left;
+    var y = $(this).position().top;
+    var w = $(this).position().width;
+    var h = $(this).position().height;
+
+    var id = $(this).attr("id");
+
+    jsonForm[id].x = x;
+    jsonForm[id].y = y;
+    jsonForm[id].w = w;
+    jsonForm[id].h = h;
+
+    console.log(jsonForm);
+
 });
 $(".bubble").bind("dragstop", function(event, ui){
     $(this).removeClass("color");   //bgi 체인지
