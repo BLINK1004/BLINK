@@ -119,8 +119,9 @@ $(".bubble").bind("dragstart",function(event, ui){
     jsonForm[id].h = h;
 
     console.log(jsonForm);
-
+    form = JSON.stringify(jsonForm);
 });
+
 $(".bubble").bind("dragstop", function(event, ui){
     $(this).removeClass("color");   //bgi 체인지
 });

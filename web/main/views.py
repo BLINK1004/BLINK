@@ -35,7 +35,6 @@ class ProjectList(ListView):
 def edit(request, pk):
     post = get_object_or_404(MImgProject, pk=pk)
 
-
     return render(request, 'main/edit.html', {"post":post})
 
 def post(request, pk):
@@ -138,8 +137,9 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
             mimgproject.save()
 
             viewURL = settings.MEDIA_ROOT + '/' + mimgproject.img_view.name
-            # ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
-            # mimgproject.ocr_data = ocr_data
+            cv_function.init_resize(viewURL)
+            ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
+            mimgproject.ocr_data = ocr_data
 
             # segmentation model run
             maskURL = mimgproject.img_view.name[:-4] + '_mask.jpg'
@@ -237,5 +237,3 @@ def img(request):
         request,
         'main/img.html',
     )
-
-
