@@ -8,6 +8,9 @@ from PIL import Image
 import keras.backend as K
 import tensorflow as tf
 
+from .ML import spell_checker
+import urllib.request
+
 import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/ML/libs')
 
@@ -169,6 +172,31 @@ def find_txt(box, json_ocr):
             print('예외 처리')
     return txt
 
+
+def trans_papago(txt):
+    # 맞춤법 검사
+    result = spell_checker.check(txt)
+    txt = result.as_dict()['checked']
+
+    client_id = ""
+    client_secret = ""
+
+    encText = urllib.parse.quote(txt)
+
+    # defalt 한글 > 영어
+    data = "source=ko&target=en&text=" + encText
+    url = "https://openapi.naver.com/v1/papago/n2mt"
+    request = urllib.request.Request(url)
+    request.add_header("X-Naver-Client-Id", client_id)
+    request.add_header("X-Naver-Client-Secret", client_secret)
+    response = urllib.request.urlopen(request, data=data.encode("utf-8"))
+    rescode = response.getcode()
+
+    if (rescode == 200):
+        response_body = response.read()
+        return json.loads(response_body.decode('utf-8'))['message']['result']['translatedText']
+    else:
+        return "Error Code:" + rescode
 
 def init_resize(path):
     ori_img = cv2.imread(path)

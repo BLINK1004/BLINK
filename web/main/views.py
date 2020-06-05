@@ -99,11 +99,17 @@ def post(request, pk):
                 try:
                     # 현재 박스안에 ocr의 텍스트가 있을경우 추출
                     record['txt'] = cv_function.find_txt(box, ocr_data)
+                    print(record['txt'], type(record['txt']))
+                    # 맞춤법검사 및 번역 api
+                    record['t_txt'] = cv_function.trans_papago(record['txt'])
+                    print(record['t_txt'], type(record['t_txt']))
+
                 except:
                     # 현재 박스안에 ocr의 텍스트가 없을경우
                     print('텍스트 검출 실패')
                     record['txt'] = ''
-                record['t_txt'] = ''
+                    record['t_txt'] = ''
+
                 record['style'] = ''
                 print(" 레코드 확인 ! ")
                 print(record)
@@ -118,6 +124,7 @@ def post(request, pk):
             # 기존 박스데이터에 현재 입력한 박스 추가
             for r in lst:
                 box_lst.append(r)
+
             post.input_box = json.dumps(box_lst)
 
             # 데이터 베이스 저장
