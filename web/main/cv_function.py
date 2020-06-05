@@ -2,11 +2,21 @@ import os
 import numpy as np
 import json
 import cv2
-from .ML.libs.pconv_model import PConvUnet
 from django.conf import settings
 from PIL import Image
-from .ML.libs.segmentation import u_net, testImg_preprocessing
 
+import sys
+sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/ML/libs')
+
+import efficientnet
+import classification_models
+from .ML.libs.pconv_model import PConvUnet
+import segmentation_models as sm
+
+# from .ML.libs.segmentation import u_net, testImg_preprocessing
+# from .ML.libs import efficientnet
+# from .ML.libs import classification_models
+# from .ML.libs import segmentation_models as sm
 
 json_path = r'C:\Users\user\Desktop\goologin-272011-f2b7a9f953f2.json'
 
@@ -123,16 +133,22 @@ def find_txt(box, json_ocr):
             print('예외 처리')
     return txt
 
-def im_read(path):
-    img = cv2.imread(path)
-    print('opencv 함수 정상 실행 확인',type(img))
+def init_resize(path):
+    ori_img = cv2.imread(path)
+    # ori_img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
+    ori_img = cv2.resize(ori_img, dsize=(768, 1536), interpolation=cv2.INTER_AREA)
+
+    cv2.imwrite(path, ori_img)
+    print(path)
 
 
 
 def predict_inp(oriURL, maskURL, inpURL):
     # 이미지 load
+    # 1536, img_cols = 768
+
     mask_img = Image.open(maskURL)
-    mask_img = mask_img.resize((256, 512))
+    # mask_img = mask_img.resize((256, 512))
     mask_img = np.array(mask_img)
 
     # mask scale : 0 ~ 255 > 1 ~ 0
@@ -141,7 +157,7 @@ def predict_inp(oriURL, maskURL, inpURL):
     mask_img = mask_img.reshape(1, mask_img.shape[0], mask_img.shape[1], mask_img.shape[2])
 
     ori_img = Image.open(oriURL)
-    ori_img = ori_img.resize((256, 512))
+    # ori_img = ori_img.resize((256, 512))
     ori_img = np.array(ori_img)
     ori_img = ori_img.reshape(1, ori_img.shape[0], ori_img.shape[1], ori_img.shape[2])
 
@@ -152,7 +168,7 @@ def predict_inp(oriURL, maskURL, inpURL):
 
     # 모델 load
     model = PConvUnet()
-    model.load('./main/ML/model/inp/V1_1.30.h5')
+    model.load('./main/ML/model/inp/V3_0.73.h5')
     out_img = model.predict([ori_img, mask_img])
 
     pred = out_img[0, :, :, :]
@@ -164,20 +180,57 @@ def predict_inp(oriURL, maskURL, inpURL):
     return print('inpaint')
 
 
+# def predict_seg(oriURL, maskURL):
+#     # ori_img 코드 추가
+#     model = u_net()
+#     ori_img = cv2.imread(oriURL)
+#
+#
+#     X_test = testImg_preprocessing(ori_img)
+#
+#     model.load_weights('./main/ML/model/seg/548--0.9618.h5')
+#     predict_img = model.predict(X_test, verbose = 1)
+#
+#     predict_img_t=np.squeeze(predict_img) # 차원축소
+#     img = predict_img_t
+#
+#     # 1채널 -> 3 채널
+#     new_img = np.stack((img,)*3, -1)
+#     cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL ,new_img*255)
+#
+#     return print('segment')
+
+import keras.backend as K
+
+
 def predict_seg(oriURL, maskURL):
     # ori_img 코드 추가
-    model = u_net()
+    K.clear_session()
     ori_img = cv2.imread(oriURL)
-    X_test = testImg_preprocessing(ori_img) 
+    ori_img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
+    ori_img = cv2.resize(ori_img, dsize=(256, 512), interpolation=cv2.INTER_AREA)
 
-    model.load_weights('./main/ML/model/seg/548--0.9618.h5') 
-    predict_img = model.predict(X_test, verbose = 1)
-    
-    predict_img_t=np.squeeze(predict_img) # 차원축소
-    img = predict_img_t
-    
+    ori_img = ori_img.reshape(1,512,256,3)
+
+    BACKBONE = 'efficientnetb3'
+    preprocess_input = sm.get_preprocessing(BACKBONE)
+    ori_img = preprocess_input(ori_img)
+    n_classes = 1
+    model = sm.FPN(BACKBONE, classes=n_classes, activation='sigmoid')
+    model.load_weights('./main/ML/model/seg/FPN_best_model_aug2.h5')
+    # model.load_weights('gdrive/My Drive/Colab Notebooks/seg_exp/v2_pspnet/model/FPN_best_model.h5')
+
+    # round는 0 ~ 1 사이의 0.6 0.7 0.1 등의 값들을 반올림 해줘서 0 or 1로 하기위함
+    predict_img = model.predict(ori_img).round()
+
+    predict_img = predict_img[..., 0].squeeze()
+
     # 1채널 -> 3 채널
-    new_img = np.stack((img,)*3, -1)
-    cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL ,new_img*255)
+    new_img = np.stack((predict_img,) * 3, -1)
+
+    # to inpaint resize
+    new_img = cv2.resize(new_img, dsize=(768, 1536), interpolation=cv2.INTER_AREA)
+
+    cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL, new_img * 255)
 
     return print('segment')

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <h1>{{post.title}}</h1>
-{{post.img_view.width}}
+<!--style="display:none;"-->
 <div id="json_data">{{post.input_box}}
 </div>
 
@@ -19,7 +19,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        height: 700px;
+        height: 600px;
 
     }
 
@@ -59,10 +59,6 @@
 <script src=" {% static 'main/_assets/js/jquery.min.js' %}"></script>
 <script src=" {% static 'main/_assets/js/jquery-ui.js' %}"></script>
 
-<div class="post">
-    <p>hello</p>
-</div>
-
 <div class="container" data-spy="scroll" data-offset="0">
 
 <div class="row">
@@ -72,23 +68,47 @@
 <div class="canvas-outline">
 <div calss="canvas_resizer">
 <div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true" id="canvas-main">
-<!--         <canvas id="canvas" width={{post.img_view.width}}px height={{post.img_view.height}}px >-->
-<!--         이 브라우저는 캔버스를 지원하지 않습니다.-->
-<!--         </canvas>-->
+
 </div>
 </div>
 </div>
 </div>
 </div>
+
+
 
 <div class="col-lg-3">
-<div class="object" id="object-list">
-</div>
+    <form method="post">
+    {% csrf_token %}
+    <button name = "save" id="save"> Save </button>
+    </form>
+
+    <ul class = "js-bubbleList"></ul>
 </div>
 
 </div>
 </div>
 
-<script src = "{% static 'main/js/editBox.js' %}"></script>
+<script src = "{% static 'main/js/test.js' %}"></script>
+<script>
+console.log("jsonparse test")
+console.log(JSON.parse(document.getElementById("json_data").innerText));
+
+$('#save').click(function(){
+
+    $.ajax({
+		url : '{% url 'edit' post.pk %}',
+		type : 'POST',
+		dataType : 'json',
+		data : {
+		    'input_box' : document.getElementById("json_data").innerText,
+		    'csrfmiddlewaretoken': '{{ csrf_token }}'
+		},
+
+    });
+});
+
+
+</script>
 
 {% endblock %}
