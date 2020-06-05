@@ -17,6 +17,7 @@ from django.core.files.images import ImageFile
 import cv2
 from django.core.files import File
 from io import BytesIO
+from querystring_parser import parser
 
 class ProjectList(ListView):
     model = MImgProject
@@ -34,8 +35,25 @@ class ProjectList(ListView):
 
 def edit(request, pk):
     post = get_object_or_404(MImgProject, pk=pk)
+    if request.method == "POST" and request.is_ajax:
+        print("request POST AJAX")
+        print(request.POST)
+        post_dict = parser.parse(request.POST.urlencode())
+        print(post_dict)
+        print("==========post_dict++++++++++++")
+        print(post_dict["input_box"])
+        post.input_box = post_dict["input_box"]
+        post.save()
 
-    return render(request, 'main/edit.html', {"post":post})
+        return redirect('edit', pk=post.pk)
+
+    else:
+        return render(request, 'main/edit.html', {"post":post})
+
+
+
+
+    # return render(request, 'main/edit.html', {"post":post})
 
 def post(request, pk):
     post = get_object_or_404(MImgProject, pk=pk)
@@ -137,9 +155,8 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
             mimgproject.save()
 
             viewURL = settings.MEDIA_ROOT + '/' + mimgproject.img_view.name
-            cv_function.init_resize(viewURL)
-            ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
-            mimgproject.ocr_data = ocr_data
+            # ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
+            # mimgproject.ocr_data = ocr_data
 
             # segmentation model run
             maskURL = mimgproject.img_view.name[:-4] + '_mask.jpg'

@@ -11,9 +11,10 @@ const bubbleList = document.querySelector(".js-bubbleList");
 const BUBBLES_LS = "bubbles";
 
 function deleteJson(id){
-    console.log(jsonForm[id]);
     delete jsonForm[id];
     console.log(jsonForm);
+    document.getElementById("json_data").innerText = JSON.stringify(jsonForm);
+    console.log(document.getElementById("json_data").innerText);
 }
 
 function deleteBox(id){
@@ -119,9 +120,11 @@ $(".bubble").bind("dragstart",function(event, ui){
     jsonForm[id].h = h;
 
     console.log(jsonForm);
-    form = JSON.stringify(jsonForm);
-});
 
+});
 $(".bubble").bind("dragstop", function(event, ui){
     $(this).removeClass("color");   //bgi 체인지
 });
+
+//console.log("jsonparse test")
+//console.log(JSON.parse(document.getElementById("json_data").innerText));
