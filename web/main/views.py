@@ -1,22 +1,19 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from .models import MImgProject
 from .forms import PostForm, UserForm, ProfileForm
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from . import cv_function
-from django.views.generic.edit import FormMixin
-from django.shortcuts import get_object_or_404
-from django.views import View
-from django.http import HttpResponse
+
 import json
-from django.core.files.images import ImageFile
 import cv2
-from django.core.files import File
-from io import BytesIO
+from . import cv_function
+
+
 from querystring_parser import parser
 
 class ProjectList(ListView):
@@ -73,24 +70,17 @@ def post(request, pk):
 
             # 원본 이미지 경로
             # origin_URL = settings.MEDIA_ROOT + '/' + post.img_origin.name
-
             # 마스크 이미지 경로
             mask_URL = settings.MEDIA_ROOT + '/' + post.img_mask.name
-
             # inpaint 이미지 경로
             inpaint_URL = settings.MEDIA_ROOT + '/' + post.img_inpaint.name
-
             # view 이미지 경로
             view_URL = settings.MEDIA_ROOT + '/' + post.img_view.name
-
             # ocr data
             ocr_data = post.ocr_data
 
             # user box 토대로 change image 저장
             img = cv_function.pixel_change(view_URL, inpaint_URL, boxs)
-
-            print(view_URL)
-
             # over write
             cv2.imwrite(view_URL, img)
 
@@ -106,7 +96,13 @@ def post(request, pk):
 
                 box = [record['x'], record['y'], record['w'], record['h']]
                 record['center'] = cv_function.init_center(mask_URL, box)
-                record['txt'] = cv_function.find_txt(box, ocr_data)
+                try:
+                    # 현재 박스안에 ocr의 텍스트가 있을경우 추출
+                    record['txt'] = cv_function.find_txt(box, ocr_data)
+                except:
+                    # 현재 박스안에 ocr의 텍스트가 없을경우
+                    print('텍스트 검출 실패')
+                    record['txt'] = ''
                 record['t_txt'] = ''
                 record['style'] = ''
                 print(" 레코드 확인 ! ")
@@ -119,13 +115,13 @@ def post(request, pk):
                 # record가 없을 경우
                 box_lst = []
 
+            # 기존 박스데이터에 현재 입력한 박스 추가
             for r in lst:
                 box_lst.append(r)
-
             post.input_box = json.dumps(box_lst)
 
+            # 데이터 베이스 저장
             form = PostForm(request.POST, instance=post)
-
             post = form.save()
 
             return redirect('detail', pk=post.pk)
@@ -136,7 +132,6 @@ def post(request, pk):
             'post':post,
         }
         return render(request, 'main/detail.html', context)
-
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
     model = MImgProject
@@ -155,8 +150,9 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
             mimgproject.save()
 
             viewURL = settings.MEDIA_ROOT + '/' + mimgproject.img_view.name
-            # ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
-            # mimgproject.ocr_data = ocr_data
+            cv_function.init_resize(viewURL)
+            ocr_data = cv_function.detect_text(viewURL) # OCR google API 사용
+            mimgproject.ocr_data = ocr_data
 
             # segmentation model run
             maskURL = mimgproject.img_view.name[:-4] + '_mask.jpg'
@@ -169,10 +165,19 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
             maskURL_ = settings.MEDIA_ROOT + '/' + mimgproject.img_mask.name
             inpURL = mimgproject.img_view.name[:-4] + '_inp.jpg'
             print(inpURL)
-            cv_function.predict_inp(viewURL, maskURL_, inpURL)
+            # cv_function.predict_inp(viewURL, maskURL_, inpURL)
+            cv_function.predict_inp_gan(viewURL, maskURL_, inpURL)
+
             mimgproject.img_inpaint = inpURL
 
-            mimgproject.img_origin = mimgproject.img_view # original 이미지 백업
+            view_img = cv2.imread(viewURL)
+            ori_img = view_img.copy()
+
+            oriURL = mimgproject.img_view.name[:-4] + '_ori.jpg'
+            print(settings.MEDIA_ROOT + '/' + oriURL)
+            cv2.imwrite(settings.MEDIA_ROOT + '/' + oriURL, ori_img)
+
+            mimgproject.img_origin = oriURL# original 이미지 백업
             mimgproject.save()
 
             return super(type(self), self).form_valid(form)
@@ -229,7 +234,7 @@ class ProfileUpdateView(View): # 간단한 View클래스를 상속 받았으므�
 
     def post(self, request):
         u = User.objects.get(id=request.user.pk)  # 로그인중인 사용자 객체를 얻어옴
-        user_form = UserForm(request.POST, instance=u)  # 기존의 것의 업데이트하는 것 이므로 기존의 인스턴스를 넘겨줘야한다. 기존의 것을 가져와 수정하는 것
+        user_form = UserForm(request.POST, instance=u)  # 기존의 것을 업데이트하는것 이므로 기존의 인스턴스를 넘겨줘야한다. 기존의 것을 가져와 수정하는 것
 
         # User 폼
         if user_form.is_valid():

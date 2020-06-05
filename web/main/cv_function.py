@@ -5,22 +5,56 @@ import cv2
 from django.conf import settings
 from PIL import Image
 
+import keras.backend as K
+import tensorflow as tf
+
 import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/ML/libs')
 
-import efficientnet
-import classification_models
-from .ML.libs.pconv_model import PConvUnet
+# from .ML.libs.pconv_model import PConvUnet
+from .ML.libs.ganinp_model import InpaintNet
 import segmentation_models as sm
+
 
 # from .ML.libs.segmentation import u_net, testImg_preprocessing
 # from .ML.libs import efficientnet
 # from .ML.libs import classification_models
 # from .ML.libs import segmentation_models as sm
 
-json_path = r'C:\Users\user\Desktop\goologin-272011-f2b7a9f953f2.json'
+json_path = '/Users/singwanghyeon/Source/git/goologin-272011-f2b7a9f953f2.json'
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
+
+# 두개의 모델을 각각 다른 그래프, 다른 세션에 초기화 해야함.
+
+graph1 = tf.Graph()
+with graph1.as_default():
+    session1 = tf.Session()
+    with session1.as_default():
+        BACKBONE = 'efficientnetb3'
+        preprocess_input = sm.get_preprocessing(BACKBONE)
+        n_classes = 1
+        s_model = sm.FPN(BACKBONE, classes=n_classes, activation='sigmoid')
+        s_model.load_weights('./main/ML/model/seg/FPN_best_model_aug2.h5')
+
+# graph2 = tf.Graph()
+# with graph2.as_default():
+#     session2 = tf.Session()
+#     with session2.as_default():
+#         i_model = PConvUnet()
+#         i_model.load('./main/ML/model/inp/V3_0.73.h5')
+
+
+graph3 = tf.Graph()
+with graph3.as_default():
+    session3 = tf.Session()
+    with session3.as_default():
+        Net = InpaintNet(batch=1)
+        Net.generator.load_weights('./main/ML/model/inp/gan_gen.h5')
+        Net.gan.load_weights('./main/ML/model/inp/gan.h5')
+        Net.discriminator.load_weights('./main/ML/model/inp/gan_dis.h5')
+
+
 
 # 업로드 단계
 def detect_text(path):
@@ -84,11 +118,13 @@ def init_center(mask_path, box):
     img_shape = img.shape
 
     print('mask shape :',img_shape)
+
     input_img = img[box[1]:box[1] + box[3], box[0]:box[0] + box[2]]
 
     # 컨투어 검출 절차 : BGR > GRAY > Binary > findContour > drawContour
     temp = 255 - input_img
     test_img = cv2.cvtColor(temp, cv2.COLOR_BGR2GRAY)
+
     ret, thresh = cv2.threshold(test_img, 230, 255, 0)
     thresh = cv2.bitwise_not(thresh)
 
@@ -133,6 +169,7 @@ def find_txt(box, json_ocr):
             print('예외 처리')
     return txt
 
+
 def init_resize(path):
     ori_img = cv2.imread(path)
     # ori_img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
@@ -142,86 +179,79 @@ def init_resize(path):
     print(path)
 
 
-
-def predict_inp(oriURL, maskURL, inpURL):
-    # 이미지 load
-    # 1536, img_cols = 768
-
-    mask_img = Image.open(maskURL)
-    # mask_img = mask_img.resize((256, 512))
-    mask_img = np.array(mask_img)
-
-    # mask scale : 0 ~ 255 > 1 ~ 0
-    mask_img = mask_img - 255
-    mask_img[mask_img != 1] = 0
-    mask_img = mask_img.reshape(1, mask_img.shape[0], mask_img.shape[1], mask_img.shape[2])
-
-    ori_img = Image.open(oriURL)
-    # ori_img = ori_img.resize((256, 512))
-    ori_img = np.array(ori_img)
-    ori_img = ori_img.reshape(1, ori_img.shape[0], ori_img.shape[1], ori_img.shape[2])
-
-    ori_img = ori_img * 1. / 255
-
-    # 원본 이미지에 마스크 입히기
-    ori_img[mask_img == 0] = 1
-
-    # 모델 load
-    model = PConvUnet()
-    model.load('./main/ML/model/inp/V3_0.73.h5')
-    out_img = model.predict([ori_img, mask_img])
-
-    pred = out_img[0, :, :, :]
-
-    pred = pred * 255
-
-    cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL, cv2.cvtColor(pred, cv2.COLOR_BGR2RGB))
-
-    return print('inpaint')
-
-
-# def predict_seg(oriURL, maskURL):
-#     # ori_img 코드 추가
-#     model = u_net()
-#     ori_img = cv2.imread(oriURL)
+# 현재 사용 x
+# def predict_pconv_inp(oriURL, maskURL, inpURL):
+#     # 이미지 load
+#     # 1536, img_cols = 768
+#
+#     K.clear_session()
 #
 #
-#     X_test = testImg_preprocessing(ori_img)
+#     mask_img = Image.open(maskURL)
+#     # mask_img = mask_img.resize((256, 512))
+#     mask_img = np.array(mask_img)
 #
-#     model.load_weights('./main/ML/model/seg/548--0.9618.h5')
-#     predict_img = model.predict(X_test, verbose = 1)
+#     mask = mask_img.copy()
+#     mask[mask < 126] = 0
+#     mask[mask > 127] = 1
 #
-#     predict_img_t=np.squeeze(predict_img) # 차원축소
-#     img = predict_img_t
+#     # mask scale : 0 ~ 255 > 1 ~ 0
+#     mask_img = mask_img - 255
+#     mask_img[mask_img != 1] = 0
+#     mask_img = mask_img.reshape(1, mask_img.shape[0], mask_img.shape[1], mask_img.shape[2])
 #
-#     # 1채널 -> 3 채널
-#     new_img = np.stack((img,)*3, -1)
-#     cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL ,new_img*255)
+#     ori_img = Image.open(oriURL)
+#     # ori_img = ori_img.resize((256, 512))
+#     ori_img = np.array(ori_img)
 #
-#     return print('segment')
-
-import keras.backend as K
+#     img_in = ori_img.copy()
+#     img_in = img_in * (1. - mask)
+#     img_in = img_in.astype(np.uint8)
+#
+#
+#     ori_img = ori_img.reshape(1, ori_img.shape[0], ori_img.shape[1], ori_img.shape[2])
+#     ori_img = ori_img * 1. / 255
+#
+#     # 원본 이미지에 마스크 입히기
+#     ori_img[mask_img == 0] = 1
+#
+#     print('original img!! : ', ori_img.shape)
+#
+#     # 모델 load
+#
+#     with graph2.as_default():
+#         with session2.as_default():
+#             out_img = i_model.predict([ori_img, mask_img])
+#
+#
+#     pred = out_img[0, :, :, :]
+#     pred = pred * 255
+#     pred = pred.astype(np.uint8)
+#     img_complete = pred * mask + img_in * (1 - mask)
+#
+#     cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL, cv2.cvtColor(img_complete, cv2.COLOR_BGR2RGB))
+#
+#     return print('inpaint')
 
 
 def predict_seg(oriURL, maskURL):
     # ori_img 코드 추가
     K.clear_session()
+
     ori_img = cv2.imread(oriURL)
     ori_img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
     ori_img = cv2.resize(ori_img, dsize=(256, 512), interpolation=cv2.INTER_AREA)
 
     ori_img = ori_img.reshape(1,512,256,3)
 
-    BACKBONE = 'efficientnetb3'
-    preprocess_input = sm.get_preprocessing(BACKBONE)
+
     ori_img = preprocess_input(ori_img)
-    n_classes = 1
-    model = sm.FPN(BACKBONE, classes=n_classes, activation='sigmoid')
-    model.load_weights('./main/ML/model/seg/FPN_best_model_aug2.h5')
-    # model.load_weights('gdrive/My Drive/Colab Notebooks/seg_exp/v2_pspnet/model/FPN_best_model.h5')
 
     # round는 0 ~ 1 사이의 0.6 0.7 0.1 등의 값들을 반올림 해줘서 0 or 1로 하기위함
-    predict_img = model.predict(ori_img).round()
+    with graph1.as_default():
+        with session1.as_default():
+            predict_img = s_model.predict(ori_img).round()
+
 
     predict_img = predict_img[..., 0].squeeze()
 
@@ -233,4 +263,54 @@ def predict_seg(oriURL, maskURL):
 
     cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL, new_img * 255)
 
+
     return print('segment')
+
+def predict_inp_gan(oriURL, maskURL, inpURL):
+    # 이미지 load
+    # 512, img_cols = 256
+    K.clear_session()
+
+    img = cv2.imread(oriURL)
+    mask_ = cv2.imread(maskURL,cv2.IMREAD_GRAYSCALE)
+
+    cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL[:-4] + 'mask_src.jpg', mask_)
+
+    # 침식+팽창 > 팽창
+    kernel = np.ones((3, 3), np.uint8)
+    mask = cv2.morphologyEx(mask_, cv2.MORPH_OPEN, kernel)
+    kernel = np.ones((8, 8), np.uint8)
+    mask = cv2.dilate(mask, kernel, iterations=1)
+    # 구멍 메우기
+    kernel_ = np.ones((3, 3), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel_)
+
+    cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL[:-4] + 'mask_dst.jpg', mask)
+
+    img_copy = img.copy()
+
+    img = cv2.resize(img, (256, 512)).reshape(1, 512, 256, 3)
+    mask = cv2.resize(mask, (256, 512)).reshape(1, 512, 256, 1)
+
+    # 전처리
+    img = img / 127.5 - 1.
+    mask[mask < 126] = 0
+    mask[mask > 127] = 1
+
+    # 모델 load
+    with graph3.as_default():
+        with session3.as_default():
+            pred = Net.generator.predict([img, mask])
+            #out_img = i_model.predict([ori_img, mask_img])
+
+    batch_pred = np.squeeze(((pred[0] + 1.) * 127.5).astype(np.uint8))
+    batch_pred = cv2.resize(batch_pred, dsize=(768, 1536), interpolation=cv2.INTER_AREA)
+
+    mask = cv2.resize(np.squeeze(mask),(768, 1536)).reshape(1536,768,1)
+    batch_incomplete = img_copy * (1. - mask)
+    batch_complete = batch_pred * mask + batch_incomplete * (1 - mask)
+    print(batch_complete.shape)
+
+    cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL, batch_complete)
+
+    return print('inpaint gan')

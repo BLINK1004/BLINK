@@ -63,11 +63,14 @@
 
 <div class="row">
 
+    <!--<canvas id="canvas-result" width={{post.img_view.width}}px height={{post.img_view.height}}px ></canvas>-->
+
 <div class="col-lg-9">
 <div id = "editor">
 <div class="canvas-outline">
 <div calss="canvas_resizer">
 <div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true" id="canvas-main">
+
 
 </div>
 </div>
@@ -80,7 +83,10 @@
 <div class="col-lg-3">
     <form method="post">
     {% csrf_token %}
+
     <button name = "save" id="save"> Save </button>
+    <input type="button" id="test" value="TEST"/>
+
     </form>
 
     <ul class = "js-bubbleList"></ul>
@@ -90,6 +96,7 @@
 </div>
 
 <script src = "{% static 'main/js/test.js' %}"></script>
+
 <script>
 console.log("jsonparse test")
 console.log(JSON.parse(document.getElementById("json_data").innerText));
@@ -107,8 +114,7 @@ $('#save').click(function(){
 
     });
 });
-
-
 </script>
+
 
 {% endblock %}

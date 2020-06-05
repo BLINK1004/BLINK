@@ -31,6 +31,23 @@ function deleteBubble(event){
     deleteJson(li.id);
 }
 
+function inputBubble(event){
+    const btn = event.target;
+    const li = btn.parentNode;
+    console.log(jsonForm[li.id])
+    var canvas = document.getElementById("canvas-main");
+    var div_img = document.createElement('img');
+    div_img.id = 'div_img'
+    div_img.src = "http://127.0.0.1:8000/media/main/20/06/gen_1.png";
+    div_img.style.left = jsonForm[li.id].x +"px";
+    div_img.style.top = jsonForm[li.id].y +"px";
+    div_img.style.width = "64px";
+    div_img.style.height = "64px";
+    div_img.style.overflow = "hidden";
+    div_img.style.position = "absolute";
+    canvas.appendChild(div_img);
+}
+
 function showBubbleList(){
     for(key in jsonForm){
     const li = document.createElement("li");
@@ -47,6 +64,12 @@ function showBubbleList(){
     delete_button.innerText = "Del";
     delete_button.addEventListener("click", deleteBubble);
     li.appendChild(delete_button);
+
+    var input_button = document.createElement('button');
+    input_button.classList.add('inpbutton');
+    input_button.innerText = "input";
+    input_button.addEventListener("click", inputBubble);
+    li.appendChild(input_button);
 
     //          영어 번역 결과가 들어가는 txt
     var text_label = document.createElement('input');
