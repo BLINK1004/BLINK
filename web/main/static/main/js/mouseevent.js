@@ -14,10 +14,11 @@ var json = new Object();
 var totalJson = new Object();
 var qx, qy;
 var extend_points = new Array();
+var att = 0; // 박스 상태 0:말풍선 1:배경글
 
 
 // 사각형 생성자
-function Rectangle(sx, sy, ex, ey, angle, color, rx, ry, extend_points) {
+function Rectangle(sx, sy, ex, ey, angle, color, rx, ry, extend_points, attr) {
     this.sx = sx;
     this.sy = sy;
     this.ex = ex;
@@ -27,6 +28,7 @@ function Rectangle(sx, sy, ex, ey, angle, color, rx, ry, extend_points) {
     this.rx = rx;
     this.ry = ry;
     this.extend_points = extend_points;
+    this.attr = attr
 }
 
 function getMovePoint(x, y) {
@@ -88,6 +90,12 @@ function rotateRect(r, angle) {
     //ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "rgba(255, 255, 255, 0)";
 
+    if (r.attr == 0){ // 말풍선 일때
+        ctx.strokeStyle = "black";
+    }else{
+        ctx.strokeStyle = "red"; //배경글일때
+    }
+
     ctx.save();
 
     ctx.translate(r.sx+(r.ex-r.sx)/2, r.sy+(r.ey-r.sy)/2 );
@@ -97,6 +105,8 @@ function rotateRect(r, angle) {
     ctx.strokeRect(r.sx, r.sy, r.ex-r.sx, r.ey-r.sy);
 
     ctx.restore();
+
+
 }
 
 function draw_point(r){
@@ -133,6 +143,7 @@ function draw_point(r){
     ctx.fillRect(qx-5, qy-5, 10, 10);
     ctx.strokeRect(qx-5, qy-5, 10, 10);
 
+    ctx.strokeStyle = "black";
 }
 
 
@@ -259,7 +270,7 @@ window.onload = function() {
 
              extend_points.push([x1,y1],[x2,y2],[x3,y3],[x4,y4]);
 
-             arRectangle.push(new Rectangle(x1, y1, x2, y2, angle, color, qx, qy, extend_points));
+             arRectangle.push(new Rectangle(x1, y1, x2, y2, angle, color, qx, qy, extend_points, att));
 
              extend_points = new Array([]);
         }
@@ -273,7 +284,8 @@ window.onload = function() {
             json.y = arRectangle[i].sy;
             json.width = (arRectangle[i].ex - arRectangle[i].sx);
             json.height = (arRectangle[i].ey - arRectangle[i].sy);
-            //json.angle = arRectangle[i].angle;
+            json.angle = arRectangle[i].angle;
+            json.attr = arRectangle[i].attr;
             jsonArray.push(json);
         }
 
@@ -308,6 +320,16 @@ var btnSave = document.getElementById("trysave");
 var pTag = document.getElementById("id_input_history")
 btnSave.onclick = function(e){
 pTag.innerText = JSON.stringify(totalJson);
+}
+
+var btn_bae = document.getElementById("att_bae");
+btn_bae.onclick = function(e){
+att = 1;
+}
+
+var btn_pun = document.getElementById("att_pun");
+btn_pun.onclick = function(e){
+att = 0;
 }
 
 
