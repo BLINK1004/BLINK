@@ -1,17 +1,23 @@
-{% extends 'main/base.html' %}
+{% extends 'main/base2.html' %}
 
 {% block title %}{{ object.title }} - Project{% endblock %}
 
 {% load static %}
 {% block content %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
+<link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Handlee&family=Metal+Mania&display=swap" rel="stylesheet">
 
 <h1>{{post.title}}</h1>
 <!--style="display:none;"-->
-<div id="json_data">{{post.input_box}}
+<div id="json_data" style="display:none;">{{post.input_box}}
 </div>
 
 <style>
+    div.space {
+    height : 50px;
+    }
+
     div.canvas-outline {
         position: absolute;
         overflow: auto;
@@ -55,7 +61,56 @@
         box-shadow:2px 2px 2px;
     }
 
+    a.MetalMania{
+        font-family: 'Metal Mania', cursive;
+        position: relative;
+        color: black;
+        display: block;
+        width: 100%;
+        padding: 0.25rem 1.5rem;
+        clear: both;
+        font-weight: 400;
+        text-align: inherit;
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+    }
+
+    a.ArchitectsDaughter{
+    font-family: 'Architects Daughter', cursive;
+    position: relative;
+    color: black;
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    }
+
+    div.form-control{
+    width: 300px;
+    }
+
 </style>
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="MetalMania" href="#">MetalMania</a>
+    <a class="ArchitectsDaughter" href="#">Architects Daughter</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+</div>
+
+<div class = "space"></div>
+
+<div class="result"></div>
+
 <script src=" {% static 'main/_assets/js/jquery.min.js' %}"></script>
 <script src=" {% static 'main/_assets/js/jquery-ui.js' %}"></script>
 

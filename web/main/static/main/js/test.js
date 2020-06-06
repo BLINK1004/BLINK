@@ -55,8 +55,9 @@ function showBubbleList(){
 
     var div_kor = document.createElement('div');
     div_kor.classList.add('form-group');
+    div_kor.value = jsonForm[key].txt;
     div_kor.innerText = jsonForm[key].txt;
-    div_kor.setAttribute("contenteditable", "true");
+    div_kor.setAttribute("contenteditable", "false");
     li.appendChild(div_kor);
 
     var delete_button = document.createElement('button');
@@ -72,11 +73,17 @@ function showBubbleList(){
     li.appendChild(input_button);
 
     //          영어 번역 결과가 들어가는 txt
-    var text_label = document.createElement('input');
-    text_label.type = 'text';
+    var text_label = document.createElement('div');
     text_label.classList.add('form-control');
-    text_label.innerText = jsonForm[key].txt;
+    text_label.value = jsonForm[key].t_txt;
+    text_label.innerText = jsonForm[key].t_txt;
+    text_label.setAttribute("contenteditable", "true");
     li.appendChild(text_label);
+//    var text_label = document.createElement('input');
+//    text_label.type = 'text';
+//    text_label.classList.add('form-control');
+//    text_label.innerText = jsonForm[key].t_txt;
+//    li.appendChild(text_label);
 
     bubbleList.appendChild(li);
     }
@@ -100,7 +107,7 @@ function paintBubbles(){
         var div_txt = document.createElement('div');
         div_txt.id = 'div ' + key;
         div_txt.style.color = "black";
-        div_txt.innerText = jsonForm[key].txt;
+        div_txt.innerText = jsonForm[key].t_txt;
         div_txt.style.left = jsonForm[key].center[1];
         div_txt.style.top = jsonForm[key].center[0];
         div_txt.setAttribute("contenteditable", "true");
