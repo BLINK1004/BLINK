@@ -1,7 +1,7 @@
 {% extends 'main/base2.html' %}
 {% load static %}
 
-{% block content %}
+{% block intro %}
 <!--    <div class="container">-->
 <!--      <div class="row">-->
 <!--      <div class="col-lg-12 text-center">-->
@@ -16,165 +16,159 @@
 <!--    </div>-->
 
 
-        <!-- Masthead-->
-        <header class="masthead">
-            <div class="container h-100">
-                <div class="row h-100 align-items-center justify-content-center text-center">
-                    <br>
-                    <div class="col-lg-10 align-self-end">
-                        <br>
-                        <p class="text-white-75 font-weight-light mb-5">Start Bootstrap can help you build better websites using the Bootstrap framework! Just download a theme and start customizing, no strings attached!</p>
-                        <div class="col-lg-8 align-self-baseline"></div>
-                        <h1 class="text-uppercase text-white font-weight-bold"><img class="img-fluid" width = "70%" src="{% static 'main/_assets/img/portfolio/thumbnails/main.gif' %}" alt="" /></h1>
-                        <hr class="divider my-4" />
-                    </div>
-                    <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 font-weight-light mb-5">Start Bootstrap can help you build better websites using the Bootstrap framework! Just download a theme and start customizing, no strings attached!</p>
-                        <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- About-->
-        <section class="page-section bg-primary" id="about">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center">
-                        <h2 class="text-white mt-0">We've got what you need!</h2>
-                        <hr class="divider light my-4" />
-                        <p class="text-white-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
-                        <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Services-->
-        <section class="page-section" id="services">
-            <div class="container">
-                <h2 class="text-center mt-0">At Your Service</h2>
+<!-- Masthead-->
+<section class="masthead bg-secondary">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center justify-content-center text-center">
+            <div class="col-lg-10 align-self-end">
+                <br><br><br><br>
+                <h1 class="text-uppercase text-white font-weight-bold">Automatic Translation</h1>
+                <h2 class="text-white-75 font-weight-light">with BLINK</h2>
+                <div class="col-lg-8 align-self-baseline"></div>
+                <img class="img-fluid" width = "70%" src="{% static 'main/_assets/img/portfolio/thumbnails/main.gif' %}" alt="" />
                 <hr class="divider my-4" />
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <i class="fas fa-4x fa-gem text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Sturdy Themes</h3>
-                            <p class="text-muted mb-0">Our themes are updated regularly to keep them bug free!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Up to Date</h3>
-                            <p class="text-muted mb-0">All dependencies are kept current to keep things fresh.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <i class="fas fa-4x fa-globe text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Ready to Publish</h3>
-                            <p class="text-muted mb-0">You can use this design as is, or you can make changes!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <i class="fas fa-4x fa-heart text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Made with Love</h3>
-                            <p class="text-muted mb-0">Is it really open source if it's not made with love?</p>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-lg-8 align-self-baseline">
+                <p class="text-white-75 font-weight-light mb-5">
+                    글자가 포함된 이미지를 넣으면 Blink가 알아서 번역해줍니다! :)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- About-->
+    <section class="page-section bg-primary" id="about">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="text-white mt-0">We've got what you need!</h2>
+                    <hr class="divider light my-4" />
+                    <p class="text-white-50"> 블링크를 이용해 간편한 번역 작업을 체험해보세요! <br>사용자 편의를 고려한 디자인으로 지금껏 경험하지 못한 간편함을 제공합니다. </p>
+                    <p class="text-white-50">세상에서 가장 간편한 번역 Tool, Blink를 이용해주세요.</p>
+                    <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
                 </div>
             </div>
-        </section>
-        <!-- Portfolio-->
-        <div id="portfolio">
-            <div class="container-fluid p-0">
-                <div class="row no-gutters">
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/1.jpg' %}"
-                            ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/1.jpg' %}" alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a>
+        </div>
+    </section>
+    <!-- Services-->
+    <section class="page-section" id="services">
+        <div class="container">
+            <h2 class="text-center mt-0">With Blink Service</h2>
+            <hr class="divider my-4" />
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-gem text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">Automatic Translation</h3>
+                        <p class="text-muted mb-0">이미지 내 텍스트를<br>자동으로 번역해줍니다.</p>
                     </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/2.jpg' %}"
-                            ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/2.jpg' %}" alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">Web<br>Translate Tool</h3>
+                        <p class="text-muted mb-0">포토샵 작업이 없이<br>웹으로 번역작업을<br>시작해보세요.</p>
                     </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/3.jpg' %}"
-                            ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/3.jpg' %}"  alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-globe text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">Collaborate<br>with others</h3>
+                        <p class="text-muted mb-0">번역작업을<br>공유할 수 있습니다.</p>
                     </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/4.jpg' %}">
-                            <img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/4.jpg' %}"  alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/5.jpg' %}"
-                            ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/5.jpg' %}"  alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/6.jpg' %}"
-                            ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/6.jpg' %}"  alt="" />
-                            <div class="portfolio-box-caption p-3">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-heart text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">Made<br>with Love</h3>
+                        <p class="text-muted mb-0">번역을 사랑하는<br>모두가 참여할 수 있습니다.</p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Call to action-->
-        <section class="page-section bg-dark text-white">
-            <div class="container text-center">
-                <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-                <a class="btn btn-light btn-xl" href="https://startbootstrap.com/themes/creative/">Download Now!</a>
-            </div>
-        </section>
-        <!-- Contact-->
-        <section class="page-section" id="contact">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center">
-                        <h2 class="mt-0">Let's Get In Touch!</h2>
-                        <hr class="divider my-4" />
-                        <p class="text-muted mb-5">Ready to start your next project with us? Give us a call or send us an email and we will get back to you as soon as possible!</p>
-                    </div>
+    </section>
+    <!-- Portfolio-->
+    <div id="portfolio">
+        <div class="container-fluid p-0">
+            <div class="row no-gutters">
+                <div class="col-lg-4 col-sm-6">
+                    <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/1.jpg' %}"
+                    ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/1.jpg' %}" alt="" />
+                        <div class="portfolio-box-caption">
+                            <div class="project-category text-white-50">Category</div>
+                            <div class="project-name">Project Name</div>
+                        </div></a>
                 </div>
-                <div class="row">
-                    <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
-                        <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
-                        <div>+1 (555) 123-4567</div>
-                    </div>
-                    <div class="col-lg-4 mr-auto text-center">
-                        <i class="fas fa-envelope fa-3x mb-3 text-muted"></i
-                        ><!-- Make sure to change the email address in BOTH the anchor text and the link target below!--><a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
-                    </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/2.jpg' %}"
+                    ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/2.jpg' %}" alt="" />
+                        <div class="portfolio-box-caption">
+                            <div class="project-category text-white-50">Category</div>
+                            <div class="project-name">Project Name</div>
+                        </div></a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/3.jpg' %}"
+                    ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/3.jpg' %}"  alt="" />
+                        <div class="portfolio-box-caption">
+                            <div class="project-category text-white-50">Category</div>
+                            <div class="project-name">Project Name</div>
+                        </div></a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/4.jpg' %}">
+                        <img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/4.jpg' %}"  alt="" />
+                        <div class="portfolio-box-caption">
+                            <div class="project-category text-white-50">Category</div>
+                            <div class="project-name">Project Name</div>
+                        </div></a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/5.jpg' %}"
+                    ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/5.jpg' %}"  alt="" />
+                        <div class="portfolio-box-caption">
+                            <div class="project-category text-white-50">Category</div>
+                            <div class="project-name">Project Name</div>
+                        </div></a
+                    >
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a class="portfolio-box" href="{% static 'main/_assets/img/portfolio/fullsize/6.jpg' %}"
+                    ><img class="img-fluid" src="{% static 'main/_assets/img/portfolio/thumbnails/6.jpg' %}"  alt="" />
+                        <div class="portfolio-box-caption p-3">
+                            <div class="project-category text-white-50">Category</div>
+                            <div class="project-name">Project Name</div>
+                        </div></a
+                    >
                 </div>
             </div>
-        </section>
-        <!-- Footer-->
-        <footer class="bg-light py-5">
-            <div class="container"><div class="small text-center text-muted">Copyright © 2020 - Start Bootstrap</div></div>
-        </footer>
+        </div>
+    </div>
+    <!-- Contact-->
+    <section class="page-section" id="contact">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mt-0">Let's Get In Touch!</h2>
+                    <hr class="divider my-4" />
+                    <p class="text-muted mb-5">Ready to start your next project with us? Give us a call or send us an email and we will get back to you as soon as possible!</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
+                    <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
+                    <div>+1 (555) 123-4567</div>
+                </div>
+                <div class="col-lg-4 mr-auto text-center">
+                    <i class="fas fa-envelope fa-3x mb-3 text-muted"></i
+                    ><!-- Make sure to change the email address in BOTH the anchor text and the link target below!--><a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer-->
+    <footer class="bg-light py-5">
+        <div class="container"><div class="small text-center text-muted">Copyright © 2020 - Blink</div></div>
+    </footer>
 
-
-{% endblock %}
+    {% endblock %}
