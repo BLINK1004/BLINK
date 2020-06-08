@@ -1,12 +1,11 @@
-{% extends 'main/base.html' %}
+{% extends 'main/base2.html' %}
 
 {% block title %}{{ object.title }} - Project{% endblock %}
 {% load static %}
 {% block content %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
 
 <h1>{{post.title}}</h1>
-{{ post.get_absolute_url }}
 <style>
     div.canvas-outline {
         position: absolute;
@@ -32,22 +31,18 @@
         transform: translate3d(0,0,0);
     }
 
-    div.object {
-        width: {{post.img_view.width}}px;
-        height: 500px;
-        background-color: red;
-    }
 
     div.resizer {
         position: relative;
         margin: 0 auto;
     }
 
+    div.space {
+    height : 50px;
+    }
+
 </style>
 
- <div>
-     <input type="button" id="clear" value="모두 지움"/>
- </div>
  <br><br>
 
   <div>
@@ -58,20 +53,24 @@
    </form>
 
 <button id="trysave" type="submit">Click for save</button>
-<button id="edit" type=button"><a href="{% url 'edit' post.pk %}">Edit</a></button>
+<button id="edit" type=button"><a href="{% url 'edit' post.pk %}">자동번역</a></button>
 
 
-<button id="att_bae" type="submit">배경글</button>
-<button id="att_pun" type="submit">말풍선</button>
+<button id="att_bae" type="submit">효과음 선택</button>
+<button id="att_pun" type="submit">말풍선 선택</button>
+<button id="clear" type="submit">초기화</button>
+<!--       <div>-->
+<!--     <input type="button" id="clear" value="모두 지움"/>-->
+<!-- </div>-->
       
   </div>
-
+<div class = "space"></div>
 
 <div class="container" data-spy="scroll" data-offset="0">
 
 <div class="row">
 
-<div class="col-lg-9">
+<div class="col-lg-12">
 <div id = "editor">
 <div class="canvas-outline">
 <div calss="canvas_resizer">
@@ -80,14 +79,12 @@
          이 브라우저는 캔버스를 지원하지 않습니다.
          </canvas>
 </div>
-</div>
-</div>
-</div>
-</div>
+    <div class = "space"></div>
 
-<div class="col-lg-3">
-<div class="object">
 </div>
+</div>
+</div>
+    <div class = "space"></div>
 </div>
 
 </div>
