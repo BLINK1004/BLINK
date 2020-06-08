@@ -3,10 +3,14 @@
 {% block title %}{{ object.title }} - Project{% endblock %}
 
 {% load static %}
+
 {% block content %}
 <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
+
 <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Handlee&family=Metal+Mania&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'main/_assets/css/jquery-ui.css' %}">
+<link rel="stylesheet" href="/resources/demos/style.css">
 
 <h1>{{post.title}}</h1>
 <!--style="display:none;"-->
@@ -95,24 +99,30 @@
     width: 300px;
     }
 
+  #selectable .ui-selecting { background: #FECA40; }
+  #selectable .ui-selected { background: #F39814; color: white; }
+  #selectable { list-style-type: none; margin: 0; padding: 0; }
+  #selectable li {font-size: 1.4em;}
+
 </style>
+
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Dropdown button
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="MetalMania" href="#">MetalMania</a>
-    <a class="ArchitectsDaughter" href="#">Architects Daughter</a>
-    <a class="dropdown-item" href="#">Something else here</a>
+    <a class="MetalMania" href="javascript:">MetalMania</a>
+    <a class="ArchitectsDaughter" href="javascript:">Architects Daughter</a>
+    <a class="dropdown-item" href="javascript:">Something else here</a>
   </div>
+    <a href="javascript:" class="badge badge-info" id="font-plus">+</a>
+    <a href="javascript:" class="badge badge-info" id="font-minus">-</a>
 </div>
 
 <div class = "space"></div>
 
 <div class="result"></div>
 
-<script src=" {% static 'main/_assets/js/jquery.min.js' %}"></script>
-<script src=" {% static 'main/_assets/js/jquery-ui.js' %}"></script>
 
 <div class="container" data-spy="scroll" data-offset="0">
 
@@ -124,7 +134,7 @@
 <div id = "editor">
 <div class="canvas-outline">
 <div calss="canvas_resizer">
-<div class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true" id="canvas-main">
+<div id="selectable" class="canvas-main" data-canvas="true" data-show-grid="false" data-show-memo="true">
 
 
 </div>
@@ -169,7 +179,11 @@ $('#save').click(function(){
 
     });
 });
-</script>
 
+$(document).ready(function(){
+    $("#selectable").selectable();
+});
+
+</script>
 
 {% endblock %}

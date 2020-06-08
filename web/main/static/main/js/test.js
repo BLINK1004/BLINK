@@ -1,5 +1,5 @@
 var ctx2;
-var canvasMain = document.getElementById("canvas-main");
+var canvasMain = document.getElementById("selectable");
 var objectList = document.getElementById("object-list");
 
 var form = document.getElementById("json_data").textContent;
@@ -94,6 +94,7 @@ function paintBubbles(){
         var div = document.createElement('div');
         div.classList.add('bubble');
         div.classList.add(key);
+        div.classList.add("ui-widget-content");
         div.id = key;
         div.style.left = jsonForm[key].x +"px";
         div.style.top = jsonForm[key].y +"px";
@@ -127,11 +128,11 @@ function init(){
 
 init();
 
-$(".bubble").draggable({      // 드래그
-    cursor:"move",      // 드래그 시 커서모양
-    stack:".post",      // .post 클래스끼리의 스택 기능
-    opacity:0.8         // 드래그 시 투명도
-});
+//$(".bubble").draggable({      // 드래그
+//    cursor:"move",      // 드래그 시 커서모양
+//    stack:".post",      // .post 클래스끼리의 스택 기능
+//    opacity:0.8         // 드래그 시 투명도
+//});
 
 $(".bubble").bind("dragstart",function(event, ui){
     $(this).addClass("color");  //bgi 체인지
@@ -154,6 +155,19 @@ $(".bubble").bind("dragstart",function(event, ui){
 });
 $(".bubble").bind("dragstop", function(event, ui){
     $(this).removeClass("color");   //bgi 체인지
+});
+
+$(".MetalMania").bind("click", function(event, ui){
+    $("#selectable").find('div.ui-selected').find('div').css('font-family', 'Metal Mania');
+});
+
+$(".ArchitectsDaughter").bind("click", function(event, ui){
+    $("#selectable").find('div.ui-selected').find('div').css('font-family', 'Architects Daughter');
+});
+
+$("#font-plus").bind("click", function(event, ui){
+//    $("#selectable").find('div.ui-selected').find('div').css('font-size', 'Architects Daughter');
+      alert( $("#selectable").find('div.ui-selected').find('div').css('font-size'));
 });
 
 //console.log("jsonparse test")
