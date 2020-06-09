@@ -167,7 +167,26 @@ $(".ArchitectsDaughter").bind("click", function(event, ui){
 
 $("#font-plus").bind("click", function(event, ui){
 //    $("#selectable").find('div.ui-selected').find('div').css('font-size', 'Architects Daughter');
-      alert( $("#selectable").find('div.ui-selected').find('div').css('font-size'));
+     $speech = $("#selectable").find('div.ui-selected').find('div');
+     var currentSize = $speech.css("fontSize");
+     var num = parseFloat(currentSize, 10);
+     var unit = currentSize.slice(-2);
+
+     num += 1;
+
+     $speech.css("fontSize", num+unit);
+
+});
+
+$("#font-minus").bind("click", function(event, ui){
+//    $("#selectable").find('div.ui-selected').find('div').css('font-size', 'Architects Daughter');
+     $speech = $("#selectable").find('div.ui-selected').find('div');
+     var currentSize = $speech.css("fontSize");
+     var num = parseFloat(currentSize, 10);
+     var unit = currentSize.slice(-2);
+     num -= 1;
+     $speech.css("fontSize", num+unit);
+
 });
 
 //console.log("jsonparse test")
