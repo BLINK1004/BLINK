@@ -38,11 +38,11 @@ def edit(request, pk):
         post_dict = parser.parse(request.POST.urlencode())
         print(post_dict)
         print("==========post_dict++++++++++++")
-        print(post_dict["input_box"])
+        # print(post_dict["input_box"])
         post.input_box = post_dict["input_box"]
         post.save()
 
-        return redirect('edit', pk=post.pk)
+        # return redirect('edit', pk=post.pk)
 
     else:
         return render(request, 'main/edit.html', {"post":post})
@@ -111,6 +111,9 @@ def post(request, pk):
                     record['t_txt'] = ''
 
                 record['style'] = ''
+                record['font'] = 'Metal Mania'
+                record['fontSize'] = '14px'
+
                 print(" 레코드 확인 ! ")
                 print(record)
                 lst.append(record)

@@ -9,12 +9,13 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Handlee&family=Metal+Mania&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'main/_assets/css/jquery-ui.css' %}">
 <link rel="stylesheet" href="/resources/demos/style.css">
 
 <h1>{{post.title}}</h1>
 <!--style="display:none;"-->
-<div id="json_data" style="display:none;">{{post.input_box}}
+<div id="json_data">{{post.input_box}}
 </div>
 
 <style>
@@ -95,6 +96,21 @@
     border: 0;
     }
 
+    a.OpenSans{
+    font-family: 'Open Sans', sans-serif;
+    position: relative;
+    color: black;
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    }
+
     div.form-control{
     width: 300px;
     }
@@ -113,7 +129,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <a class="MetalMania" href="javascript:">MetalMania</a>
     <a class="ArchitectsDaughter" href="javascript:">Architects Daughter</a>
-    <a class="dropdown-item" href="javascript:">Something else here</a>
+    <a class="OpenSans" href="javascript:">OpenSans</a>
   </div>
     <a href="javascript:" class="badge badge-info" id="font-plus">+</a>
     <a href="javascript:" class="badge badge-info" id="font-minus">-</a>
@@ -161,13 +177,15 @@
 </div>
 
 <script src = "{% static 'main/js/test.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $("#selectable").selectable();
+});
+</script>
 
 <script>
-console.log("jsonparse test")
-console.log(JSON.parse(document.getElementById("json_data").innerText));
-
 $('#save').click(function(){
-
+    console.log(document.getElementById("json_data").innerText);
     $.ajax({
 		url : '{% url 'edit' post.pk %}',
 		type : 'POST',
@@ -179,11 +197,6 @@ $('#save').click(function(){
 
     });
 });
-
-$(document).ready(function(){
-    $("#selectable").selectable();
-});
-
 </script>
 
 {% endblock %}
