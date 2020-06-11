@@ -15,10 +15,16 @@
 
 <h1>{{post.title}}</h1>
 <!--style="display:none;"-->
-<div id="json_data">{{post.input_box}}
+<div id="json_data" style="display:none;">{{post.input_box}}
 </div>
 
 <style>
+    li.box {
+    position: relative;
+    padding: 27px 0 43px;
+    border-bottom: 1px solid #b7bdbf;
+    }
+
     div.space {
     height : 50px;
     }
@@ -30,8 +36,13 @@
         left: 0;
         right: 0;
         bottom: 0;
-        height: 600px;
+        height: 643px;
 
+    }
+    ul.js-bubbleList {
+        position: relative;
+        height: 643px;
+        overflow: auto;
     }
 
     div.canvas-main {
@@ -133,6 +144,7 @@
   </div>
     <a href="javascript:" class="badge badge-info" id="font-plus">+</a>
     <a href="javascript:" class="badge badge-info" id="font-minus">-</a>
+    <button name = "save" id="save"> Save </button>
 </div>
 
 <div class = "space"></div>
@@ -160,15 +172,7 @@
 </div>
 
 
-
 <div class="col-lg-3">
-    <form method="post">
-    {% csrf_token %}
-
-    <button name = "save" id="save"> Save </button>
-    <input type="button" id="test" value="TEST"/>
-
-    </form>
 
     <ul class = "js-bubbleList"></ul>
 </div>
@@ -185,18 +189,17 @@ $(document).ready(function(){
 
 <script>
 $('#save').click(function(){
-    console.log(document.getElementById("json_data").innerText);
     $.ajax({
 		url : '{% url 'edit' post.pk %}',
 		type : 'POST',
 		dataType : 'json',
 		data : {
+		    'csrfmiddlewaretoken': '{{ csrf_token }}',
 		    'input_box' : document.getElementById("json_data").innerText,
-		    'csrfmiddlewaretoken': '{{ csrf_token }}'
 		},
 
     });
-});
+})
 </script>
 
 {% endblock %}

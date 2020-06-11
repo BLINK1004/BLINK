@@ -36,19 +36,17 @@ def edit(request, pk):
         print("request POST AJAX")
         print(request.POST)
         post_dict = parser.parse(request.POST.urlencode())
+        post.input_box = post_dict["input_box"]
+        post.save()
         print(post_dict)
         print("==========post_dict++++++++++++")
         # print(post_dict["input_box"])
-        post.input_box = post_dict["input_box"]
-        post.save()
+
 
         # return redirect('edit', pk=post.pk)
 
     else:
         return render(request, 'main/edit.html', {"post":post})
-
-
-
 
     # return render(request, 'main/edit.html', {"post":post})
 

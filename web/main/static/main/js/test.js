@@ -56,6 +56,7 @@ function showBubbleList(){
     for(key in jsonForm){
     var li = document.createElement("li");
     li.id = key;
+    li.classList.add('box');
 
     var div_kor = document.createElement('div');
     div_kor.classList.add('form-group');
@@ -177,6 +178,8 @@ $(".MetalMania").bind("click", function(event, ui){
 $(".ArchitectsDaughter").bind("click", function(event, ui){
     $("#selectable").find('div.ui-selected').find('div').css('font-family', 'Architects Daughter');
 });
+
+//OpenSans 글씨체 변경
 $(".OpenSans").bind("click", function(event, ui){
     $("#selectable").find('div.ui-selected').find('div').css('font-family', 'Open Sans');
 });
@@ -186,6 +189,8 @@ $("#font-plus").bind("click", function(event, ui){
 //    $("#selectable").find('div.ui-selected').find('div').css('font-size', 'Architects Daughter');
      $speech = $("#selectable").find('div.ui-selected').find('div');
      var currentSize = $speech.css("fontSize");
+     console.log(currentSize);
+
      var num = parseFloat(currentSize, 10);
      var unit = currentSize.slice(-2);
 
