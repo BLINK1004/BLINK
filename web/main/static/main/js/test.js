@@ -67,6 +67,8 @@ function showBubbleList(){
 
     var delete_button = document.createElement('button');
     delete_button.classList.add('delbutton');
+    delete_button.classList.add('btn');
+    delete_button.classList.add('btn-outline-secondary');
     delete_button.innerText = "Del";
     delete_button.addEventListener("click", deleteBubble);
     li.appendChild(delete_button);
@@ -74,6 +76,8 @@ function showBubbleList(){
     var input_button = document.createElement('button');
     input_button.classList.add('inpbutton');
     input_button.innerText = "input";
+    input_button.classList.add('btn');
+    input_button.classList.add('btn-outline-secondary');
     input_button.addEventListener("click", inputBubble);
     li.appendChild(input_button);
 
