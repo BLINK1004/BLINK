@@ -7,9 +7,10 @@ var jsonForm = JSON.parse(form)
 console.log("--------------JSON.parse(obj) result in EditBox ----------");
 console.log(jsonForm);
 
-const bubbleList = document.querySelector(".js-bubbleList");
-const BUBBLES_LS = "bubbles";
+var bubbleList = document.querySelector(".js-bubbleList");
+var BUBBLES_LS = "bubbles";
 
+//json 내 제거하고자 하는 말풍선 데이터 삭제
 function deleteJson(id){
     delete jsonForm[id];
     console.log(jsonForm);
@@ -17,23 +18,25 @@ function deleteJson(id){
     console.log(document.getElementById("json_data").innerText);
 }
 
+//화면 오른쪽에서 해당 리스트 삭제
 function deleteBox(id){
     var name2 = 'div ' + id;
     var child = document.getElementById(name2);
     child.remove();
     }
 
+//delete버튼을 누를 때 얻은 event로 target을 찾아 제거
 function deleteBubble(event){
-    const btn = event.target;
-    const li = btn.parentNode;
+    var btn = event.target;
+    var li = btn.parentNode;
     bubbleList.removeChild(li);
     deleteBox(li.id);
     deleteJson(li.id);
 }
 
 function inputBubble(event){
-    const btn = event.target;
-    const li = btn.parentNode;
+    var btn = event.target;
+    var li = btn.parentNode;
     console.log(jsonForm[li.id])
     var canvas = document.getElementById("canvas-main");
     var div_img = document.createElement('img');
@@ -48,10 +51,12 @@ function inputBubble(event){
     canvas.appendChild(div_img);
 }
 
+//화면 오른쪽에 원본 txt와 번역 txt를 나열해주고 잘못된 말풍선을 지울 수 있도록 설정
 function showBubbleList(){
     for(key in jsonForm){
-    const li = document.createElement("li");
+    var li = document.createElement("li");
     li.id = key;
+    li.classList.add('box');
 
     var div_kor = document.createElement('div');
     div_kor.classList.add('form-group');
@@ -62,6 +67,8 @@ function showBubbleList(){
 
     var delete_button = document.createElement('button');
     delete_button.classList.add('delbutton');
+    delete_button.classList.add('btn');
+    delete_button.classList.add('btn-outline-secondary');
     delete_button.innerText = "Del";
     delete_button.addEventListener("click", deleteBubble);
     li.appendChild(delete_button);
@@ -69,6 +76,8 @@ function showBubbleList(){
     var input_button = document.createElement('button');
     input_button.classList.add('inpbutton');
     input_button.innerText = "input";
+    input_button.classList.add('btn');
+    input_button.classList.add('btn-outline-secondary');
     input_button.addEventListener("click", inputBubble);
     li.appendChild(input_button);
 
@@ -89,6 +98,7 @@ function showBubbleList(){
     }
 }
 
+//canvas(만화) 위에 사용자가 지정한 영역에 번역 결과를 띄워줌
 function paintBubbles(){
     for(key in jsonForm){
         var div = document.createElement('div');
@@ -116,16 +126,21 @@ function paintBubbles(){
         div_txt.style.verticalAlign = "middle";
         div_txt.style.position = "relative";
         div_txt.style.display = "table-cell";
+        div_txt.style.fontSize = jsonForm[key].fontSize;
+        div_txt.style.fontFamily = jsonForm[key].font;
+        console.log(jsonForm[key].font);
         div.appendChild(div_txt);
     }
     }
 
+//paintBubbles()와 showBubbleList() 함수 실행
 function init(){
     paintBubbles();
     showBubbleList();
 
 }
 
+//동작 시작
 init();
 
 //$(".bubble").draggable({      // 드래그
@@ -153,22 +168,33 @@ $(".bubble").bind("dragstart",function(event, ui){
     console.log(jsonForm);
 
 });
+
 $(".bubble").bind("dragstop", function(event, ui){
     $(this).removeClass("color");   //bgi 체인지
 });
 
+//Metal Mania 글씨체 변경
 $(".MetalMania").bind("click", function(event, ui){
     $("#selectable").find('div.ui-selected').find('div').css('font-family', 'Metal Mania');
 });
 
+//ArchitectsDaughter 글씨체 변경
 $(".ArchitectsDaughter").bind("click", function(event, ui){
     $("#selectable").find('div.ui-selected').find('div').css('font-family', 'Architects Daughter');
 });
 
+//OpenSans 글씨체 변경
+$(".OpenSans").bind("click", function(event, ui){
+    $("#selectable").find('div.ui-selected').find('div').css('font-family', 'Open Sans');
+});
+
+//글자 크기 증가
 $("#font-plus").bind("click", function(event, ui){
 //    $("#selectable").find('div.ui-selected').find('div').css('font-size', 'Architects Daughter');
      $speech = $("#selectable").find('div.ui-selected').find('div');
      var currentSize = $speech.css("fontSize");
+     console.log(currentSize);
+
      var num = parseFloat(currentSize, 10);
      var unit = currentSize.slice(-2);
 
@@ -178,6 +204,7 @@ $("#font-plus").bind("click", function(event, ui){
 
 });
 
+//글자 크기 감소
 $("#font-minus").bind("click", function(event, ui){
 //    $("#selectable").find('div.ui-selected').find('div').css('font-size', 'Architects Daughter');
      $speech = $("#selectable").find('div.ui-selected').find('div');
@@ -186,8 +213,17 @@ $("#font-minus").bind("click", function(event, ui){
      var unit = currentSize.slice(-2);
      num -= 1;
      $speech.css("fontSize", num+unit);
-
 });
 
-//console.log("jsonparse test")
-//console.log(JSON.parse(document.getElementById("json_data").innerText));
+//form-control text 변경 감지
+$("body").on('propertychange change keyup paste input', ".form-control", function(event) {
+    var btn = event.target;
+    var li = btn.parentNode;
+
+    var div = 'div ' + li.id;
+    var divbox = document.getElementById(div);
+    divbox.innerText = btn.innerText;
+    jsonForm[li.id].t_txt = btn.innerText;
+    document.getElementById("json_data").innerText = JSON.stringify(jsonForm);
+});
+

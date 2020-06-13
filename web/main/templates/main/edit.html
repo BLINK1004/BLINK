@@ -9,6 +9,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Handlee&family=Metal+Mania&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'main/_assets/css/jquery-ui.css' %}">
 <link rel="stylesheet" href="/resources/demos/style.css">
 
@@ -18,6 +19,17 @@
 </div>
 
 <style>
+<!--    div.dropdown {-->
+<!--    padding: 10px;-->
+<!--    border-bottom: 1px solid #b7bdbf;-->
+<!--    }-->
+
+    li.box {
+    position: relative;
+    padding: 27px 0 43px;
+    border-bottom: 1px solid #b7bdbf;
+    }
+
     div.space {
     height : 50px;
     }
@@ -29,8 +41,13 @@
         left: 0;
         right: 0;
         bottom: 0;
-        height: 600px;
+        height: 643px;
 
+    }
+    ul.js-bubbleList {
+        position: relative;
+        height: 643px;
+        overflow: auto;
     }
 
     div.canvas-main {
@@ -95,6 +112,21 @@
     border: 0;
     }
 
+    a.OpenSans{
+    font-family: 'Open Sans', sans-serif;
+    position: relative;
+    color: black;
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    }
+
     div.form-control{
     width: 300px;
     }
@@ -107,16 +139,17 @@
 </style>
 
 <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown button
+  <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Select Font
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <a class="MetalMania" href="javascript:">MetalMania</a>
     <a class="ArchitectsDaughter" href="javascript:">Architects Daughter</a>
-    <a class="dropdown-item" href="javascript:">Something else here</a>
+    <a class="OpenSans" href="javascript:">OpenSans</a>
   </div>
-    <a href="javascript:" class="badge badge-info" id="font-plus">+</a>
-    <a href="javascript:" class="badge badge-info" id="font-minus">-</a>
+    <a href="javascript:" class="btn btn-outline-secondary" id="font-plus">+</a>
+    <a href="javascript:" class="btn btn-outline-secondary" id="font-minus">-</a>
+    <button name = "save" class="btn btn-outline-danger" id="save"> Save </button>
 </div>
 
 <div class = "space"></div>
@@ -144,15 +177,7 @@
 </div>
 
 
-
 <div class="col-lg-3">
-    <form method="post">
-    {% csrf_token %}
-
-    <button name = "save" id="save"> Save </button>
-    <input type="button" id="test" value="TEST"/>
-
-    </form>
 
     <ul class = "js-bubbleList"></ul>
 </div>
@@ -161,29 +186,25 @@
 </div>
 
 <script src = "{% static 'main/js/test.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $("#selectable").selectable();
+});
+</script>
 
 <script>
-console.log("jsonparse test")
-console.log(JSON.parse(document.getElementById("json_data").innerText));
-
 $('#save').click(function(){
-
     $.ajax({
 		url : '{% url 'edit' post.pk %}',
 		type : 'POST',
 		dataType : 'json',
 		data : {
+		    'csrfmiddlewaretoken': '{{ csrf_token }}',
 		    'input_box' : document.getElementById("json_data").innerText,
-		    'csrfmiddlewaretoken': '{{ csrf_token }}'
 		},
 
     });
-});
-
-$(document).ready(function(){
-    $("#selectable").selectable();
-});
-
+})
 </script>
 
 {% endblock %}
