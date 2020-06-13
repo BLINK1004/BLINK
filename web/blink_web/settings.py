@@ -135,7 +135,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 1
+SITE_ID = 2
 LOGIN_REDIRECT_URL = '/intro' ### 오류가 나면 홈으로 돌아와라
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

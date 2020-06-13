@@ -5,6 +5,9 @@
 {% block content %}
 
 <!-- enctype 추가 해줘야 image 데이터가 정상적으로 저장됨 -->
+<h1>Create Your Project</h1>
+<p>번역을 원하는 이미지를 업로드해주세요.</p>
+<br>
 <form method="post" enctype="multipart/form-data">{% csrf_token %}
     <table>
         {{ form.as_table }}
@@ -16,21 +19,16 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Loading...</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title" id="exampleModalLabel">Translating...</h5>
                 </button>
             </div>
 
             <div class="modal-body">
                 <div class="d-flex justify-content-center">
                     <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
+                        <span class="sr-only">Translating...</span>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

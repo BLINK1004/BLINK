@@ -3,24 +3,25 @@
 {% block content %}
 
 <!-- Page Content -->
+{% if user.is_authenticated %}
+<button class="btn btn-primary btn-large float-right" onclick="location.href='/create/'">New Project</button>
+{% endif %}
+
+<h1>MY Project List</h1>
+<br>
 <div class="container">
-  {% if user.is_authenticated %}
-  <button class="btn btn-warning btn-large float-right" onclick="location.href='/create/'">New Project</button>
-  {% endif %}
 
   <div class="row">
 
-    <div class="col-lg-3">
-      <h2 class="my-4">내 프로젝트</h2>
+    <div class="col-lg-2">
       <div class="list-group">
-        <a href="/project/" class="list-group-item">내 프로젝트</a>
         <a href="#" class="list-group-item">공유하기</a>
       </div>
 
     </div>
     <!-- /.col-lg-3 -->
 
-    <div class="col-lg-9">
+    <div class="col-lg-10">
 
       <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -45,7 +46,7 @@
         {% if object_list.exists %}
         {% for p in object_list %}
         {% if p.user == user %}
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-4 mb-3">
           <div class="card h-100">
             <a href="{{ p.get_absolute_url }}" id="read-more-project-{{ p.pk }}"><img class="card-img-top" src="{{p.img_view.url}}" alt=""></a>
             <div class="card-body">
@@ -57,6 +58,7 @@
             </div>
             <div class="card-footer">
               <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+              <a class="btn btn-primary btn-sm float-right" href="{{p.img_view.url}}" download="{{p.title}}.jpg">Download</a>
             </div>
           </div>
         </div>
