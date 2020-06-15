@@ -13,8 +13,9 @@ import json
 import cv2
 from . import cv_function
 
-
 from querystring_parser import parser
+
+import uuid
 
 class ProjectList(ListView):
     model = MImgProject
@@ -36,14 +37,34 @@ def edit(request, pk):
         print("request POST AJAX")
         print(request.POST)
         post_dict = parser.parse(request.POST.urlencode())
-        post.input_box = post_dict["input_box"]
-        post.save()
-        print(post_dict)
-        print("==========post_dict++++++++++++")
-        # print(post_dict["input_box"])
 
+        if 'input_box' in post_dict.keys():
+            print('확인.')
+            print(post_dict)
+            print("==========post_dict++++++++++++")
+            print(post_dict["input_box"])
+            post.input_box = post_dict["input_box"]
+            post.save()
 
-        # return redirect('edit', pk=post.pk)
+        elif 'txt' in post_dict.keys():
+            font_path = "./main/ML/IndieFlower-Regular.ttf"
+
+            size = (64, 64)
+            sentense = post_dict['txt']
+
+            if len(sentense) > 10 :
+                print('10글자 이상 제한')
+                return redirect('edit', pk=post.pk)
+
+            for char in sentense:
+                save_path = settings.MEDIA_ROOT + '/' + post.img_view.name[:-4] + "_" + str(post.pk) + str(char) + ".png"
+                print(save_path)
+                cv_function.gen_char(font_path, size, char, save_path)
+
+            print('txt확인')
+            print(post_dict)
+
+        return redirect('edit', pk=post.pk)
 
     else:
         return render(request, 'main/edit.html', {"post":post})
@@ -96,8 +117,9 @@ def post(request, pk):
                 record['center'] = cv_function.init_center(mask_URL, box)
                 try:
                     # 현재 박스안에 ocr의 텍스트가 있을경우 추출
-                    record['txt'] = cv_function.find_txt(box, ocr_data)
+                    record['txt'] = cv_function.spell_check(cv_function.find_txt(box, ocr_data))
                     print(record['txt'], type(record['txt']))
+
                     # 맞춤법검사 및 번역 api
                     record['t_txt'] = cv_function.trans_papago(record['txt'])
                     print(record['t_txt'], type(record['t_txt']))
@@ -111,8 +133,10 @@ def post(request, pk):
                 record['style'] = ''
                 record['font'] = 'Metal Mania'
                 record['fontSize'] = '14px'
+                record['pk'] = str(uuid.uuid4())[0:6]
 
                 print(" 레코드 확인 ! ")
+
                 print(record)
                 lst.append(record)
             try:
@@ -166,6 +190,7 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
             maskURL = mimgproject.img_view.name[:-4] + '_mask.jpg'
             print(maskURL)
             cv_function.predict_seg(viewURL, maskURL)
+            # cv_function.predict_seg_unet(viewURL, maskURL)
             mimgproject.img_mask = maskURL
             mimgproject.save()
 
@@ -173,7 +198,7 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
             maskURL_ = settings.MEDIA_ROOT + '/' + mimgproject.img_mask.name
             inpURL = mimgproject.img_view.name[:-4] + '_inp.jpg'
             print(inpURL)
-            # cv_function.predict_inp(viewURL, maskURL_, inpURL)
+            # cv_function.predict_pconv_inp(viewURL, maskURL_, inpURL)
             cv_function.predict_inp_gan(viewURL, maskURL_, inpURL)
 
             mimgproject.img_inpaint = inpURL

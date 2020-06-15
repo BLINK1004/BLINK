@@ -3,7 +3,7 @@ import numpy as np
 import json
 import cv2
 from django.conf import settings
-from PIL import Image
+from PIL import ImageFont, ImageDraw, Image
 
 import keras.backend as K
 import tensorflow as tf
@@ -14,10 +14,10 @@ import urllib.request
 import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/ML/libs')
 
+# from .ML.libs.segmentation import u_net, testImg_preprocessing
 # from .ML.libs.pconv_model import PConvUnet
 from .ML.libs.ganinp_model import InpaintNet
 import segmentation_models as sm
-
 
 # from .ML.libs.segmentation import u_net, testImg_preprocessing
 # from .ML.libs import efficientnet
@@ -57,6 +57,12 @@ with graph3.as_default():
         Net.gan.load_weights('./main/ML/model/inp/gan.h5')
         Net.discriminator.load_weights('./main/ML/model/inp/gan_dis.h5')
 
+# graph4 = tf.Graph()
+# with graph4.as_default():
+#     session4 = tf.Session()
+#     with session4.as_default():
+#         su_model = u_net()
+#         su_model.load_weights('./main/ML/model/seg/548--0.9618.h5')
 
 
 # 업로드 단계
@@ -137,22 +143,25 @@ def init_center(mask_path, box):
     cnt = 0
     cx_arr = np.array([])
     cy_arr = np.array([])
+    try:
+        for i in contours:
+            cnt += 1
+            # 컨투어 특징 추출
+            mmt = cv2.moments(i)
 
-    for i in contours:
-        cnt += 1
-        # 컨투어 특징 추출
-        mmt = cv2.moments(i)
+            # m10/m00, m01/m00  중심점 계산
+            cx = int(mmt['m10'] / mmt['m00'])
+            cx_arr = np.append(cx_arr, cx)
+            cy = int(mmt['m01'] / mmt['m00'])
+            cy_arr = np.append(cy_arr, cy)
 
-        # m10/m00, m01/m00  중심점 계산
-        cx = int(mmt['m10'] / mmt['m00'])
-        cx_arr = np.append(cx_arr, cx)
-        cy = int(mmt['m01'] / mmt['m00'])
-        cy_arr = np.append(cy_arr, cy)
+            sp = mmt['m00']  # 넓이 추후 넓이관련 알고리즘 추가 예정
 
-        sp = mmt['m00']  # 넓이 추후 넓이관련 알고리즘 추가 예정
 
-    center_x = int(np.mean(cx_arr))
-    center_y = int(np.mean(cy_arr))
+            center_x = int(np.mean(cx_arr))
+            center_y = int(np.mean(cy_arr))
+    except:
+        return ''
 
     dst = [box[0] + center_x, box[1] + center_y]
     print(dst)
@@ -172,14 +181,14 @@ def find_txt(box, json_ocr):
             print('예외 처리')
     return txt
 
+def spell_check(txt):
+    result = spell_checker.check(txt)
+    return result.as_dict()['checked']
 
 def trans_papago(txt):
     # 맞춤법 검사
-    result = spell_checker.check(txt)
-    txt = result.as_dict()['checked']
-
-    client_id = ""
-    client_secret = ""
+    client_id = "M2VOVJFkC4Z_gntP5VLj"
+    client_secret = "KNeIw3L8Ow"
 
     encText = urllib.parse.quote(txt)
 
@@ -204,6 +213,7 @@ def init_resize(path):
     ori_img = cv2.resize(ori_img, dsize=(768, 1536), interpolation=cv2.INTER_AREA)
 
     cv2.imwrite(path, ori_img)
+
     print(path)
 
 
@@ -267,11 +277,11 @@ def predict_seg(oriURL, maskURL):
     K.clear_session()
 
     ori_img = cv2.imread(oriURL)
+
     ori_img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
     ori_img = cv2.resize(ori_img, dsize=(256, 512), interpolation=cv2.INTER_AREA)
 
     ori_img = ori_img.reshape(1,512,256,3)
-
 
     ori_img = preprocess_input(ori_img)
 
@@ -289,10 +299,22 @@ def predict_seg(oriURL, maskURL):
     # to inpaint resize
     new_img = cv2.resize(new_img, dsize=(768, 1536), interpolation=cv2.INTER_AREA)
 
+    ### OPEN CV 후처리 ###
+    # 침식+팽창 > 팽창
+    kernel = np.ones((3, 3), np.uint8)
+    new_img = cv2.morphologyEx(new_img, cv2.MORPH_OPEN, kernel)
+    kernel = np.ones((8, 8), np.uint8)
+    new_img = cv2.dilate(new_img, kernel, iterations=1)
+    # 구멍 메우기
+    kernel_ = np.ones((7, 7), np.uint8)
+    new_img = cv2.morphologyEx(new_img, cv2.MORPH_CLOSE, kernel_)
+
+
     cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL, new_img * 255)
 
 
     return print('segment')
+
 
 def predict_inp_gan(oriURL, maskURL, inpURL):
     # 이미지 load
@@ -300,20 +322,13 @@ def predict_inp_gan(oriURL, maskURL, inpURL):
     K.clear_session()
 
     img = cv2.imread(oriURL)
+
+
     mask_ = cv2.imread(maskURL,cv2.IMREAD_GRAYSCALE)
 
     cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL[:-4] + 'mask_src.jpg', mask_)
 
-    # 침식+팽창 > 팽창
-    kernel = np.ones((3, 3), np.uint8)
-    mask = cv2.morphologyEx(mask_, cv2.MORPH_OPEN, kernel)
-    kernel = np.ones((8, 8), np.uint8)
-    mask = cv2.dilate(mask, kernel, iterations=1)
-    # 구멍 메우기
-    kernel_ = np.ones((3, 3), np.uint8)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel_)
-
-    cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL[:-4] + 'mask_dst.jpg', mask)
+    mask = mask_
 
     img_copy = img.copy()
 
@@ -329,7 +344,6 @@ def predict_inp_gan(oriURL, maskURL, inpURL):
     with graph3.as_default():
         with session3.as_default():
             pred = Net.generator.predict([img, mask])
-            #out_img = i_model.predict([ori_img, mask_img])
 
     batch_pred = np.squeeze(((pred[0] + 1.) * 127.5).astype(np.uint8))
     batch_pred = cv2.resize(batch_pred, dsize=(768, 1536), interpolation=cv2.INTER_AREA)
@@ -342,3 +356,96 @@ def predict_inp_gan(oriURL, maskURL, inpURL):
     cv2.imwrite(settings.MEDIA_ROOT + '/' + inpURL, batch_complete)
 
     return print('inpaint gan')
+
+
+
+# u-net 사용코드
+# def predict_seg_unet(oriURL, maskURL):
+#     # ori_img 코드 추가
+#
+#     ori_img = cv2.imread(oriURL)
+#     ori_img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
+#     ori_img = cv2.resize(ori_img, dsize=(256, 512), interpolation=cv2.INTER_AREA)
+#     print(ori_img.shape)
+#     X_test = testImg_preprocessing(ori_img)
+#     print(ori_img.shape)
+#
+#
+#     with graph4.as_default():
+#         with session4.as_default():
+#             predict_img = su_model.predict(X_test, verbose=1)
+#
+#     predict_img_t = np.squeeze(predict_img)  # 차원축소
+#     img = predict_img_t
+#
+#     # 1채널 -> 3 채널
+#     new_img = np.stack((img,) * 3, -1)
+#     cv2.imwrite(settings.MEDIA_ROOT + '/' + maskURL, new_img * 255)
+#
+#     return print('segment')
+
+
+# 폰트위치
+# 폰트크기 size = tuple
+# 타겟 캐릭터
+# 저장경로 및 파일명
+def gen_char(font_path, size, char, save_path):
+    if len(char) != 1:
+        return print('error only one char')
+
+    text_to_show = char
+    image_black = np.full((250, 250, 3), 128, np.uint8)
+    image_white = np.full((250, 250, 3), 128, np.uint8)
+
+    # Convert the image to RGB (OpenCV uses BGR)
+    cv2_image_black = cv2.cvtColor(image_black, cv2.COLOR_BGR2RGB)
+    cv2_image_white = cv2.cvtColor(image_white, cv2.COLOR_BGR2RGB)
+
+    # Pass the image to PIL
+    pil_im_b = Image.fromarray(cv2_image_black)
+    pil_im_w = Image.fromarray(cv2_image_white)
+
+    draw = ImageDraw.Draw(pil_im_b)
+    draw2 = ImageDraw.Draw(pil_im_w)
+
+    # use a truetype font
+    font = ImageFont.truetype(font_path, 200)
+
+    # Draw the text
+    draw2.text((50, 0), text_to_show, font=font, fill=(255, 255, 255, 255))
+    draw.text((50, 0), text_to_show, font=font, fill=(0, 0, 0, 255))
+
+    # Get back the image to OpenCV
+    cv2_im_processed_b = cv2.cvtColor(np.array(pil_im_b), cv2.COLOR_RGB2BGR)
+    cv2_im_processed_w = cv2.cvtColor(np.array(pil_im_w), cv2.COLOR_RGB2BGR)
+
+    # 침식
+    kernel = np.ones((8, 8), np.uint8)
+    cv2_im_processed_b = cv2.erode(cv2_im_processed_b, kernel, iterations=1)
+
+
+    # 팽창
+    kernel = np.ones((3, 3), np.uint8)
+    cv2_im_processed_w = cv2.dilate(cv2_im_processed_w, kernel, iterations=1)
+
+
+    cv2_im_processed_b[cv2_im_processed_w == 255] = 255
+
+    cv2_im_processed_b = cv2.resize(cv2_im_processed_b, dsize=size, interpolation=cv2.INTER_AREA)
+
+
+    gen1 = cv2.cvtColor(cv2_im_processed_b, cv2.COLOR_RGB2RGBA)
+
+    newData = []
+    for gg in gen1:
+        for g in gg:
+            if g[0] == 128:
+                g = [0, 0, 0, 0]
+            newData.append(g)
+
+    result = np.array(newData).reshape(size[0], size[1], 4)
+    crop_size = int(size[0] / 10)
+    result = result[crop_size:-crop_size, crop_size:-crop_size]
+
+    # print(aa.shape)
+    cv2.imwrite(save_path, result)
